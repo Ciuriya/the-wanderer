@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour {
 
-    public float m_maxHealth;           // The player's maximum health
-    private float m_health;              // The player's current health
+    public int m_maxLife;               // The player's maximum life
+    private int m_life;                 // The player's current life
     public float m_maxHeat;             // The player's maximum heat
-    private float m_heatRate;            // The player's overheat/sec rate
+    private float m_heatRate;           // The player's overheat/sec rate
     public float m_heat;                // The player's current heat
     public float m_initialHitCooldown;  // The player's initial hit cooldown time after being hit (in seconds)
     private float m_hitCooldown;        // The player's current cooldown time (in seconds)
@@ -30,8 +30,8 @@ public class PlayerStats : MonoBehaviour {
 
     void Start() {
         // values are saved in PlayerPrefs to allow for easy transfer between levels
-        m_maxHealth = PlayerPrefs.GetFloat("maxHealth", 100f);
-        m_health = PlayerPrefs.GetFloat("health", 100f);
+        m_maxLife = PlayerPrefs.GetInt("maxlife", 1);
+        m_life = PlayerPrefs.GetInt("life", 1);
         m_maxHeat = PlayerPrefs.GetFloat("maxHeat", 1f);
         m_heatRate = PlayerPrefs.GetFloat("heatRate", 0.1f);
         m_heat = PlayerPrefs.GetFloat("heat", 0f);
@@ -78,8 +78,8 @@ public class PlayerStats : MonoBehaviour {
     }
 
     public void ResetStats() {
-        setMaxHealth(100f);
-        setHealth(100f);
+        setMaxLife(1);
+        setLife(1);
         setMaxHeat(1f);
         setHeatRate(0.1f);
         setHeat(0f);
@@ -98,29 +98,33 @@ public class PlayerStats : MonoBehaviour {
         setJumpDisabled(false);
     }
 
-    protected void setMaxHealth(float p_maxHealth) {
-        m_maxHealth = p_maxHealth;
-        PlayerPrefs.SetFloat("maxHealth", p_maxHealth);
+    public int getCurrentLife() {
+        return m_life;
     }
 
-    protected void setHealth(float p_health) {
-        float health = p_health;
+    protected void setMaxLife(int p_maxlife) {
+        m_maxLife = p_maxlife;
+        PlayerPrefs.SetInt("maxlife", p_maxlife);
+    }
 
-        if (p_health > m_maxHealth) {
-            health = m_maxHealth;
+    protected void setLife(int p_life) {
+        int life = p_life;
+
+        if (p_life > m_maxLife) {
+            life = m_maxLife;
         }
 
-        m_health = health;
-        PlayerPrefs.SetFloat("health", health);
+        m_life = life;
+        PlayerPrefs.SetInt("life", life);
     }
 
-    public void damage(float p_amount) {
-        if (m_hitCooldown <= 0 && p_amount > m_health) {
-            p_amount = m_health;
+    public void damage(int p_amount) {
+        if (m_hitCooldown <= 0 && p_amount > m_life) {
+            p_amount = m_life;
             m_hitCooldown = m_initialHitCooldown;
         }
 
-        m_health -= p_amount;
+        m_life -= p_amount;
     }
 
     public void setMaxHeat(float p_maxHeat) {

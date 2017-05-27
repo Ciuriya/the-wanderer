@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 namespace Player2D
 {
@@ -13,18 +14,22 @@ namespace Player2D
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                GetComponent<Rigidbody2D>().velocity = new Vector2(0, m_jumpHeight);
+            if (GetComponent<PlayerStats>().getCurrentLife() <= 0) {
+                Application.LoadLevel(0);
             }
 
             Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
 
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                rigidbody.AddRelativeForce(new Vector2(0, m_jumpHeight), ForceMode2D.Impulse);
+            }
+
             rigidbody.AddRelativeForce(new Vector2(m_acceleration, 0), ForceMode2D.Force);
 
-            if (rigidbody.velocity.magnitude > m_moveSpeed)
+            if (rigidbody.velocity.x > m_moveSpeed)
             {
-                rigidbody.velocity = rigidbody.velocity.normalized * m_moveSpeed;
+                rigidbody.velocity = new Vector2(rigidbody.velocity.normalized.x * m_moveSpeed, rigidbody.velocity.y);
             }
         }
 
@@ -36,7 +41,7 @@ namespace Player2D
             // If we touch an ennemy
             if (collider.tag == "Ennemy")
             {
-                stats.damage(0.1f);
+                stats.damage(1);
             }
 
             // If we collide from the side to an object
@@ -45,7 +50,7 @@ namespace Player2D
 
             if (contactPoint.x > center.x)
             {
-                stats.damage(0.1f);
+                stats.damage(1);
             }
         }
     }
