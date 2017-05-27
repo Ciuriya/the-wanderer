@@ -9,8 +9,10 @@ public class InputController : MonoBehaviour {
     private PlayerController m_controller; // The controller
 
     void Start() {
-        m_player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        m_controller = m_player.gameObject.GetComponent<PlayerController>();
+        if (GameManager.UIManager.FindElement("menu") == null) {
+            m_player = GameObject.FindWithTag("Player").GetComponent<Player>();
+            m_controller = m_player.gameObject.GetComponent<PlayerController>();
+        }
     }
 
     void Update() {

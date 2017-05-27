@@ -44,13 +44,12 @@ public class GameManager : MonoBehaviour {
         m_gamePaused = false;
         m_manager = gameObject.GetComponent<GameManager>();
         m_playerStats = gameObject.AddComponent<PlayerStats>();
+        m_inputController = gameObject.AddComponent<InputController>();
         m_uiManager = GameObject.FindWithTag("UI_Manager").GetComponent<UIManager>();
 
         // This is the main menu, so we want to reset everything for future use
         if (UIManager.FindElement("menu") != null) {
             PlayerStats.ResetStats();
-        } else {
-            m_inputController = gameObject.AddComponent<InputController>();
         }
 	}
 }
