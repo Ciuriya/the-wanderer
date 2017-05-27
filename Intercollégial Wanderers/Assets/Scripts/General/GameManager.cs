@@ -29,6 +29,13 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    private static UIManager m_uiManager;
+    public static UIManager UIManager {
+        get {
+            return m_uiManager;
+        }
+    }
+
     public static bool m_gamePaused;          // If game is currently paused
     public List<AudioSource> m_musicSources;  // All musical audio sources currently used in the game
     public List<AudioSource> m_effectSources; // All effect audio sources currently used in the game
@@ -37,11 +44,13 @@ public class GameManager : MonoBehaviour {
         m_gamePaused = false;
         m_manager = gameObject.GetComponent<GameManager>();
         m_playerStats = gameObject.AddComponent<PlayerStats>();
-        m_inputController = gameObject.AddComponent<InputController>();
+        m_uiManager = GameObject.FindWithTag("UI_Manager").GetComponent<UIManager>();
 
         // This is the main menu, so we want to reset everything for future use
-        if (GameObject.FindWithTag("UI_Manager").GetComponent<UIManager>().FindElement("menu") != null) {
-            m_playerStats.ResetStats();
+        if (UIManager.FindElement("menu") != null) {
+            PlayerStats.ResetStats();
+        } else {
+            m_inputController = gameObject.AddComponent<InputController>();
         }
 	}
 }

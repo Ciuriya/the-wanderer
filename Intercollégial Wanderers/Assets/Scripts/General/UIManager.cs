@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Player2D;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,6 +9,13 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour {
 
     public List<UIElement> m_elements; // The list of UI Elements to manage
+    public AudioClip m_menuOpen;       // The menu opening sound
+    public AudioClip m_menuClose;      // The menu closing sound
+
+    [HideInInspector]
+    public long m_lastPause;           // The last pause time
+
+    public float m_pauseCooldown;      // The pause button cooldown
     private bool m_volumeLoaded;       // If the volume options are loaded, the UI Manager loads before the Game Manager which causes issues
 
     void Start() {
@@ -56,20 +65,39 @@ public class UIManager : MonoBehaviour {
 
     // Toggles the pause menu on or off
     public void TogglePause() {
+        m_lastPause = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
         GameObject pauseMenu = FindElement("pause");
         GameObject settingsMenu = FindElement("settings");
         GameObject mainMenu = FindElement("menu");
 
         if (mainMenu != null) {
+            if (!mainMenu.activeSelf) {
+                GameManager.Instance.m_effectSources[0].clip = m_menuOpen;
+                GameManager.Instance.m_effectSources[0].Play(0);
+            }
+
             mainMenu.SetActive(true);
             settingsMenu.SetActive(false);
+
             return;
         }
 
         if (settingsMenu.activeSelf) {
             settingsMenu.SetActive(false);
             pauseMenu.SetActive(true);
+
+            GameManager.Instance.m_effectSources[0].clip = m_menuClose;
+            GameManager.Instance.m_effectSources[0].Play(0);
         } else {
+            if (!pauseMenu.activeSelf) {
+                GameManager.Instance.m_effectSources[0].clip = m_menuClose;
+            } else {
+                GameManager.Instance.m_effectSources[0].clip = m_menuOpen;
+            }
+
+            GameManager.Instance.m_effectSources[0].Play(0);
+
             pauseMenu.SetActive(!pauseMenu.activeSelf);
         }
 
@@ -123,10 +151,7 @@ public class UIManager : MonoBehaviour {
 
     // The method used by the jump button to jump
     public void Jump() {
-        // insert jump code here or link it to the variable
-        FindElement("jump").SetActive(false);
-        GameManager.PlayerStats.m_isJumping = true;
-        // make sure to re-enable button later
+        GameManager.InputController.Jump();
     }
 
     // The method used by the stop button to stop
@@ -139,10 +164,8 @@ public class UIManager : MonoBehaviour {
 
     // The method used by the shoot button to shoot
     public void Shoot() {
-        // insert shooting code here or link it to the variable
         FindElement("shoot").SetActive(false);
         GameManager.PlayerStats.m_isShooting = true;
-        // make sure to re-enable button later
     }
 
     // The method used by the fly button to fly
