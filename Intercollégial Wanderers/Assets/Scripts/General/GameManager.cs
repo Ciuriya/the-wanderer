@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour {
 
     public static bool m_gamePaused;          // If game is currently paused
     public AudioClip m_gameOverSound;         // Sound played when the game is over
+    public AudioClip m_victorySound;          // Sound played when the game is won
     public int m_gameOverLength;              // Length of the game over fail time, to replace with a real menu if possible
     public List<AudioSource> m_musicSources;  // All musical audio sources currently used in the game
     public List<AudioSource> m_effectSources; // All effect audio sources currently used in the game
