@@ -16,6 +16,7 @@ namespace Player2D
 
         public float m_moveForce = 365f;          // Amount of force added to move the player left and right.
         public float m_maxSpeed = 5f;             // The fastest the player can travel in the x axis.
+        public float m_maxFallSpeed = 10f;
         public AudioClip[] m_jumpClips;           // Array of clips for when the player jumps.
         public float m_jumpForce = 1000f;         // Amount of force added when the player jumps.
         public AudioClip[] m_taunts;              // Array of clips for when the player taunts.
@@ -60,6 +61,10 @@ namespace Player2D
             if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x) > m_maxSpeed)
                 // ... set the player's velocity to the maxSpeed in the x axis.
                 GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Sign(GetComponent<Rigidbody2D>().velocity.x) * m_maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
+
+            if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.y) < -m_maxFallSpeed)
+                // ... set the player's velocity to the maxSpeed in the x axis.
+                GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, Mathf.Sign(GetComponent<Rigidbody2D>().velocity.y) * -m_maxFallSpeed);
 
             if (m_grounded) {
                 GameManager.PlayerStats.m_isJumping = false;
