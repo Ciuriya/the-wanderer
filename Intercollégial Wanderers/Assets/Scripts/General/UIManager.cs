@@ -158,10 +158,8 @@ public class UIManager : MonoBehaviour {
 
     // The method used by the shoot button to shoot
     public void Shoot() {
-        // insert shooting code here or link it to the variable
         FindElement("shoot").SetActive(false);
         GameManager.PlayerStats.m_isShooting = true;
-        // make sure to re-enable button later
     }
 
     // The method used by the fly button to fly

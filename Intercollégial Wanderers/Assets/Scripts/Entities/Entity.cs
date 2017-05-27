@@ -11,7 +11,7 @@ public abstract class Entity : MonoBehaviour {
     protected bool m_isDead;                 // If the entity is dead
     public Projectile m_projectile;          // The projectile shot by the entity
     public bool m_canDie;                    // If the entity can die
-    protected long m_lastShot;                // The time of the entity's last shot
+    protected long m_lastShot;               // The time of the entity's last shot
     public List<Effect> m_effectsGivenOff;   // Effects given off by this entity
 
     void Start() {

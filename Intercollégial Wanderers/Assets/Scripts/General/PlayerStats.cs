@@ -118,13 +118,17 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetInt("life", life);
     }
 
-    public void damage(int p_amount) {
+    public void Damage(int p_amount) {
         if (m_hitCooldown <= 0 && p_amount > m_life) {
             p_amount = m_life;
             m_hitCooldown = m_initialHitCooldown;
         }
 
         m_life -= p_amount;
+
+        if (m_life <= 0) {
+            GameObject.FindWithTag("Player").GetComponent<Player>().Kill();
+        }
     }
 
     public void setMaxHeat(float p_maxHeat) {

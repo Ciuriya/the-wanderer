@@ -14,10 +14,6 @@ namespace Player2D
 
         void Update()
         {
-            if (GetComponent<PlayerStats>().getCurrentLife() <= 0) {
-                Application.LoadLevel(0);
-            }
-
             Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
 
             if (Input.GetKeyDown(KeyCode.Space))
@@ -41,7 +37,7 @@ namespace Player2D
             // If we touch an ennemy
             if (collider.tag == "Ennemy")
             {
-                stats.damage(1);
+                stats.Damage(1);
             }
 
             // If we collide from the side to an object
@@ -50,7 +46,7 @@ namespace Player2D
 
             if (contactPoint.x > center.x)
             {
-                stats.damage(1);
+                stats.Damage(1);
             }
         }
     }
