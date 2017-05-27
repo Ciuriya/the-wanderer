@@ -11,7 +11,7 @@ public abstract class Entity : MonoBehaviour {
     protected bool m_isDead;                 // If the entity is dead
     public Projectile m_projectile;          // The projectile shot by the entity
     public bool m_canDie;                    // If the entity can die
-    protected long m_lastShot;                // The time of the entity's last shot
+    protected long m_lastShot;               // The time of the entity's last shot
     public List<Effect> m_effectsGivenOff;   // Effects given off by this entity
 
     void Start() {
@@ -22,11 +22,13 @@ public abstract class Entity : MonoBehaviour {
         m_lastShot = 0;
     }
 
-    void OnCollisionEnter(Collision p_collider) {
+    void OnCollisionEnter2D(Collision2D p_collision) {
+        Collider2D collider = p_collision.collider;
+
         // If the colliding object is an entity, trigger every contained effect that transfers via touch
-        if (p_collider.gameObject.name != gameObject.name &&
-            p_collider.gameObject.GetComponent<Entity>() != null) {
-            Effect.TriggerEffects(m_effectsGivenOff, p_collider.gameObject.GetComponent<Entity>(), TriggerEvent.TOUCH);
+        if (collider.gameObject.name != gameObject.name &&
+            collider.gameObject.GetComponent<Entity>() != null) {
+            Effect.TriggerEffects(m_effectsGivenOff, collider.gameObject.GetComponent<Entity>(), TriggerEvent.TOUCH);
         }
     }
 

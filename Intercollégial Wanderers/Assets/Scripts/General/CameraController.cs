@@ -7,13 +7,13 @@ public class CameraController : MonoBehaviour {
     public GameObject player;   // Reference to the player's game object
     private Vector3 offset;     // Offset distance between the player and this camera
     
-    void Start()
-    {
+    void Start() {
         offset = transform.position - player.transform.position;
     }
     
-    void LateUpdate()
-    {
-        transform.position = player.transform.position + offset;
+    void LateUpdate() {
+        if (player != null) {
+            transform.position = player.transform.position + offset;
+        }
     }
 }
