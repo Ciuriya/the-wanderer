@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour {
 
     public List<UIElement> m_elements; // The list of UI Elements to manage
+    public AudioClip m_menuOpen;       // The menu opening sound
+    public AudioClip m_menuClose;      // The menu closing sound
     private bool m_volumeLoaded;       // If the volume options are loaded, the UI Manager loads before the Game Manager which causes issues
 
     void Start() {
@@ -61,15 +63,32 @@ public class UIManager : MonoBehaviour {
         GameObject mainMenu = FindElement("menu");
 
         if (mainMenu != null) {
+            if (!mainMenu.activeSelf) {
+                GameManager.Instance.m_effectSources[0].clip = m_menuOpen;
+                GameManager.Instance.m_effectSources[0].Play(0);
+            }
+
             mainMenu.SetActive(true);
             settingsMenu.SetActive(false);
+
             return;
         }
 
         if (settingsMenu.activeSelf) {
             settingsMenu.SetActive(false);
             pauseMenu.SetActive(true);
+
+            GameManager.Instance.m_effectSources[0].clip = m_menuClose;
+            GameManager.Instance.m_effectSources[0].Play(0);
         } else {
+            if (!pauseMenu.activeSelf) {
+                GameManager.Instance.m_effectSources[0].clip = m_menuClose;
+            } else {
+                GameManager.Instance.m_effectSources[0].clip = m_menuOpen;
+            }
+
+            GameManager.Instance.m_effectSources[0].Play(0);
+
             pauseMenu.SetActive(!pauseMenu.activeSelf);
         }
 
