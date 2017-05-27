@@ -11,42 +11,28 @@ namespace Player2D
         public float m_acceleration;    // Acceleration of the player
         public float m_moveSpeed;       // Max movement speed
         public float m_jumpHeight;      // Speed of the jump
+        private bool m_startedMoving;   // If the player started moving
 
         void Update()
         {
             Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
 
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                rigidbody.AddRelativeForce(new Vector2(0, m_jumpHeight), ForceMode2D.Impulse);
+            if (rigidbody.velocity.y == 0) {
+                GameManager.PlayerStats.m_isJumping = false;
+                GameManager.UIManager.FindElement("jump").SetActive(true);
             }
 
             rigidbody.AddRelativeForce(new Vector2(m_acceleration, 0), ForceMode2D.Force);
 
-            if (rigidbody.velocity.x > m_moveSpeed)
-            {
+            if (rigidbody.velocity.x > m_moveSpeed) {
                 rigidbody.velocity = new Vector2(rigidbody.velocity.normalized.x * m_moveSpeed, rigidbody.velocity.y);
             }
-        }
 
-        void OnCollisionEnter2D(Collision2D collision)
-        {
-            Collider2D collider = collision.collider;
-            PlayerStats stats = GetComponent<PlayerStats>();
-
-            // If we touch an ennemy
-            if (collider.tag == "Ennemy")
-            {
-                stats.Damage(1);
-            }
-
-            // If we collide from the side to an object
-            Vector3 contactPoint = collision.contacts[0].point;
-            Vector3 center = collider.bounds.center;
-
-            if (contactPoint.x > center.x)
-            {
-                stats.Damage(1);
+            // We hit an object
+            if (rigidbody.velocity.x == 0 && m_startedMoving && !GameManager.PlayerStats.m_isStopped) {
+                GameManager.PlayerStats.Damage(1);
+            } else if (!m_startedMoving) {
+                m_startedMoving = true;
             }
         }
     }

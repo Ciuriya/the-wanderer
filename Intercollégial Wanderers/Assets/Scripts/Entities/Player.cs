@@ -31,12 +31,12 @@ public class Player : Entity {
         if (m_canShoot && currentMillis - m_lastShot > m_fireRate * 1000) {
             m_lastShot = currentMillis;
 
-            UIManager uiManager = GameObject.FindWithTag("UI_Manager").GetComponent<UIManager>();
-            uiManager.Shoot();
+            GameManager.UIManager.Shoot();
             GameObject bullet = Instantiate(m_projectile.gameObject, transform.position, Quaternion.identity) as GameObject;
             bullet.GetComponent<Rigidbody>().AddForce(transform.forward * 10);
+
             GameManager.PlayerStats.m_isShooting = false;
-            uiManager.FindElement("shoot").SetActive(true);
+            GameManager.UIManager.FindElement("shoot").SetActive(true);
         }
     }
 }

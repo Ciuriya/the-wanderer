@@ -11,9 +11,12 @@ public class Projectile : Entity {
         m_canShoot = false;
     }
 
-    void OnCollisionEnter(Collision p_collider) {
+    void OnCollisionEnter2D(Collision2D p_collision) {
+        Collider2D collider = p_collision.collider;
+
         GameManager.Instance.m_effectSources[0].clip = m_hitSound;
         GameManager.Instance.m_effectSources[0].Play(0);
+
         Die();
     }
 
