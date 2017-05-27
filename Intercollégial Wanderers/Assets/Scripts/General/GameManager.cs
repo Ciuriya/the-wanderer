@@ -15,12 +15,13 @@ public class GameManager : MonoBehaviour {
     // The instance of the player's stats
     private static PlayerStats m_playerStats;
     public static PlayerStats PlayerStats {
-        get {
+        get
+        {
             return m_playerStats;
         }
     }
 
-	void Start() {
+    void Start() {
         m_manager = gameObject.GetComponent<GameManager>();
         m_playerStats = gameObject.AddComponent<PlayerStats>();
 	}
