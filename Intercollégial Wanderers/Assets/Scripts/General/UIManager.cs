@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
@@ -8,14 +9,35 @@ public class UIManager : MonoBehaviour {
     // The list of UI Elements to manage
     public List<UIElement> m_elements;
 
-    // The method used by the speed slider to increment/decrement the speed value
-    public void SpeedSlider(float p_value) {
-        GameManager.PlayerStats.setSpeed(p_value);
+    void Start() {
+        FindElement("pause").SetActive(false);
+    }
+
+    public void TogglePause() {
+        GameObject pauseMenu = FindElement("pause");
+        pauseMenu.SetActive(!pauseMenu.activeSelf);
+        GameManager.m_gamePaused = pauseMenu.activeSelf;
+    }
+
+    public void MainMenu() {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void Exit() {
+        Application.Quit();
     }
 
     // The method used by the height slider to increment/decrement the speed value
     public void HeightSlider(float p_value) {
         GameManager.PlayerStats.setHeight(p_value);
+    }
+
+    // The method used by the boost button to boost
+    public void Boost() {
+        // insert boost code here or link it to the variable
+        FindElement("boost").SetActive(false);
+        GameManager.PlayerStats.m_isBoosting = true;
+        // make sure to re-enable button later
     }
 
     // The method used by the jump button to jump
