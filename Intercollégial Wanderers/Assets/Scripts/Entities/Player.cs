@@ -6,8 +6,8 @@ public class Player : Entity {
 
     void Start() {
         m_name = "Player";
-        m_canShoot = !GameManager.PlayerStats.m_shootDisabled;
-        m_fireRate = GameManager.PlayerStats.m_fireRate;
+        m_canShoot = true;
+        m_fireRate = 1f;
     }
 
     void Update() {
@@ -21,8 +21,19 @@ public class Player : Entity {
         // throw back to main menu or something
     }
 
-    // Shoots the projectile
-    protected override void ShootProjectile() {
-        throw new NotImplementedException();
+    // Handles the entity's shooting process
+    public override void Shoot()
+    {
+        long currentMillis = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+        // If the entity can fire again, we shoot (fireRate is in seconds)
+        if (m_canShoot && currentMillis - m_lastShot > m_fireRate * 1000) {
+            m_lastShot = currentMillis;
+
+            GameObject.FindWithTag("UI_Manager").GetComponent<UIManager>().Shoot();
+            GameObject bullet = Instantiate(m_projectile.gameObject, transform.position, Quaternion.identity) as GameObject;
+            bullet.GetComponent<Rigidbody>().AddForce(transform.forward * 10);
+            // stop shooting eventually idfk, #logic, I'll take a nap now
+        }
     }
 }
