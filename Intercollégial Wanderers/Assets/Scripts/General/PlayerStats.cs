@@ -5,26 +5,28 @@ using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour {
 
-    public float m_maxHealth;      // The player's maximum health
-    public float m_health;         // The player's current health
-    public float m_maxHeat;        // The player's maximum heat
-    public float m_heatRate;       // The player's overheat/sec rate
-    public float m_heat;           // The player's current heat
-    public float m_fireRate;       // The player's current firing rate/sec
-    public float m_height;         // The player's current flying height
-    public bool m_isStopped;       // If the player is currently stopped
-    public bool m_isShooting;      // If the player is currently shooting
-    public bool m_isJumping;       // If the player is currently jumping
-    public bool m_isFlying;        // If the player is currently flying
-    public bool m_isBoosting;      // If the player is currently boosting
-    public bool m_boostDisabled;   // If the player's boosting is disabled
-    public bool m_shootDisabled;   // If the player's shooting is disabled
-    public bool m_heightDisabled;  // If the player's height meter is disabled
-    public bool m_flyDisabled;     // If the player's flying is disabled
-    public bool m_stopDisabled;    // If the player's stopping is disabled
-    public bool m_jumpDisabled;    // If the player's jumping is disabled
-    public bool m_updateSliders;   // Used by sliders to know whether or not sliders need to be updated
-    private UIManager m_uiManager; // A local instance of the UI Manager to update sliders
+    public float m_maxHealth;           // The player's maximum health
+    private float m_health;              // The player's current health
+    public float m_maxHeat;             // The player's maximum heat
+    private float m_heatRate;            // The player's overheat/sec rate
+    public float m_heat;                // The player's current heat
+    public float m_initialHitCooldown;  // The player's initial hit cooldown time after being hit (in seconds)
+    private float m_hitCooldown;        // The player's current cooldown time (in seconds)
+    public float m_fireRate;            // The player's current firing rate/sec
+    public float m_height;              // The player's current flying height
+    public bool m_isStopped;            // If the player is currently stopped
+    public bool m_isShooting;           // If the player is currently shooting
+    public bool m_isJumping;            // If the player is currently jumping
+    public bool m_isFlying;             // If the player is currently flying
+    public bool m_isBoosting;           // If the player is currently boosting
+    public bool m_boostDisabled;        // If the player's boosting is disabled
+    public bool m_shootDisabled;        // If the player's shooting is disabled
+    public bool m_heightDisabled;       // If the player's height meter is disabled
+    public bool m_flyDisabled;          // If the player's flying is disabled
+    public bool m_stopDisabled;         // If the player's stopping is disabled
+    public bool m_jumpDisabled;         // If the player's jumping is disabled
+    public bool m_updateSliders;        // Used by sliders to know whether or not sliders need to be updated
+    private UIManager m_uiManager;      // A local instance of the UI Manager to update sliders
 
     void Start() {
         // values are saved in PlayerPrefs to allow for easy transfer between levels
@@ -66,6 +68,15 @@ public class PlayerStats : MonoBehaviour {
         }
     }
 
+    private void Update()
+    {
+        // Update the hit cooldown
+        if (m_hitCooldown > 0f)
+        {
+            m_hitCooldown -= Time.deltaTime;
+        }
+    }
+
     public void ResetStats() {
         setMaxHealth(100f);
         setHealth(100f);
@@ -87,12 +98,12 @@ public class PlayerStats : MonoBehaviour {
         setJumpDisabled(false);
     }
 
-    public void setMaxHealth(float p_maxHealth) {
+    protected void setMaxHealth(float p_maxHealth) {
         m_maxHealth = p_maxHealth;
         PlayerPrefs.SetFloat("maxHealth", p_maxHealth);
     }
 
-    public void setHealth(float p_health) {
+    protected void setHealth(float p_health) {
         float health = p_health;
 
         if (p_health > m_maxHealth) {
@@ -101,6 +112,15 @@ public class PlayerStats : MonoBehaviour {
 
         m_health = health;
         PlayerPrefs.SetFloat("health", health);
+    }
+
+    public void damage(float p_amount) {
+        if (m_hitCooldown <= 0 && p_amount > m_health) {
+            p_amount = m_health;
+            m_hitCooldown = m_initialHitCooldown;
+        }
+
+        m_health -= p_amount;
     }
 
     public void setMaxHeat(float p_maxHeat) {
