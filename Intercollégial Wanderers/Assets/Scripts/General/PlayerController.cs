@@ -16,14 +16,10 @@ namespace Player2D
 
         public float m_moveForce = 365f;          // Amount of force added to move the player left and right.
         public float m_maxSpeed = 5f;             // The fastest the player can travel in the x axis.
+        public float m_maxFallSpeed = 10f;
         public AudioClip[] m_jumpClips;           // Array of clips for when the player jumps.
         public float m_jumpForce = 1000f;         // Amount of force added when the player jumps.
-        public AudioClip[] m_taunts;              // Array of clips for when the player taunts.
-        public float m_tauntProbability = 50f;    // Chance of a taunt happening.
-        public float m_tauntDelay = 1f;           // Delay for when the taunt should happen.
 
-
-        private int m_tauntIndex;                 // The index of the taunts array indicating the most recent taunt.
         private Transform m_groundCheck;          // A position marking where to check if the player is grounded.
         private bool m_grounded = false;          // Whether or not the player is grounded.
         private Animator m_anim;                  // Reference to the player's animator component.
@@ -61,6 +57,10 @@ namespace Player2D
                 // ... set the player's velocity to the maxSpeed in the x axis.
                 GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Sign(GetComponent<Rigidbody2D>().velocity.x) * m_maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
 
+            if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.y) < -m_maxFallSpeed)
+                // ... set the player's velocity to the maxSpeed in the x axis.
+                GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, Mathf.Sign(GetComponent<Rigidbody2D>().velocity.y) * -m_maxFallSpeed);
+
             if (m_grounded) {
                 GameManager.PlayerStats.m_isJumping = false;
                 GameManager.UIManager.FindElement("jump").SetActive(true);
@@ -92,40 +92,6 @@ namespace Player2D
             Vector3 theScale = transform.localScale;
             theScale.x *= -1;
             transform.localScale = theScale;
-        }
-
-        public IEnumerator Taunt() {
-            // Check the random chance of taunting.
-            float tauntChance = UnityEngine.Random.Range(0f, 100f);
-            if (tauntChance > m_tauntProbability)
-            {
-                // Wait for tauntDelay number of seconds.
-                yield return new WaitForSeconds(m_tauntDelay);
-
-                // If there is no clip currently playing.
-                if (!GetComponent<AudioSource>().isPlaying)
-                {
-                    // Choose a random, but different taunt.
-                    m_tauntIndex = TauntRandom();
-
-                    // Play the new taunt.
-                    GetComponent<AudioSource>().clip = m_taunts[m_tauntIndex];
-                    GetComponent<AudioSource>().Play();
-                }
-            }
-        }
-
-        int TauntRandom() {
-            // Choose a random index of the taunts array.
-            int i = UnityEngine.Random.Range(0, m_taunts.Length);
-
-            // If it's the same as the previous taunt...
-            if (i == m_tauntIndex)
-                // ... try another random taunt.
-                return TauntRandom();
-            else
-                // Otherwise return this index.
-                return i;
         }
 
         public bool IsGrounded() {
