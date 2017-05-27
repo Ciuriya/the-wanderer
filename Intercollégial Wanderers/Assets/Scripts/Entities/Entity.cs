@@ -17,6 +17,8 @@ public abstract class Entity : MonoBehaviour {
     public AudioClip m_shootSound;           // Sound of the shooting of this entity
     protected long m_lastShot;               // The time of the entity's last shot
     public List<Effect> m_effectsGivenOff;   // Effects given off by this entity
+    private Vector3 m_savedPosition;         // If the game is paused, the entity needs to save its location
+    private Vector2 m_savedSpeed;            // If the game is paused, the entity needs to save its velocity
 
     void Start() {
         m_fireRate = 1f;
@@ -29,6 +31,8 @@ public abstract class Entity : MonoBehaviour {
     }
 
     void Update() {
+        if (PauseCheck()) return;
+
         long currentMillis = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
         if (currentMillis - m_lastShot > m_fireRate * 1000 && m_autoFire) {
@@ -36,7 +40,37 @@ public abstract class Entity : MonoBehaviour {
         }
     }
 
+    protected bool PauseCheck() {
+        Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
+
+        if (GameManager.m_gamePaused && m_savedSpeed == new Vector2(0, 0)) {
+            m_savedPosition = transform.position;
+            m_savedSpeed = rigidbody.velocity;
+            rigidbody.velocity = new Vector2(0, 0);
+            rigidbody.gravityScale = 0;
+
+            return true;
+        } else if (GameManager.m_gamePaused) {
+            transform.position = m_savedPosition;
+
+            return true;
+        }
+
+        if (m_savedSpeed != new Vector2(0, 0)) {
+            rigidbody.velocity = m_savedSpeed;
+            rigidbody.gravityScale = 1;
+        }
+
+        m_savedSpeed = new Vector2(0, 0);
+
+        return false;
+    }
+
     void OnCollisionEnter2D(Collision2D p_collision) {
+        if (GameManager.m_gamePaused) {
+            return;
+        }
+
         Collider2D collider = p_collision.collider;
 
         // If the colliding object is an entity, trigger every contained effect that transfers via touch

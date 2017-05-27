@@ -9,11 +9,10 @@ namespace Player2D
     [RequireComponent(typeof(PlayerStats))]
     public class PlayerController : MonoBehaviour
     { 
-        private bool m_startedMoving;           // If the player started moving
+        private bool m_startedMoving;             // If the player started moving
 
         [HideInInspector]
         public bool m_facingRight = true;         // For determining which way the player is currently facing.
-
 
         public float m_moveForce = 365f;          // Amount of force added to move the player left and right.
         public float m_maxSpeed = 5f;             // The fastest the player can travel in the x axis.
@@ -29,8 +28,7 @@ namespace Player2D
         private bool m_grounded = false;          // Whether or not the player is grounded.
         private Animator m_anim;                  // Reference to the player's animator component.
 
-        void Awake()
-        {
+        void Awake() {
             // Setting up references.
             m_groundCheck = transform.Find("groundChecker");
             //anim = GetComponent<Animator>();
@@ -43,6 +41,10 @@ namespace Player2D
         }
 
         void FixedUpdate() {
+            if (GameManager.m_gamePaused) {
+                return;
+            }
+
             // Cache the horizontal input.
             float h = Input.GetAxis("Horizontal");
 
@@ -82,7 +84,6 @@ namespace Player2D
             }
         }
 
-
         void Flip() {
             // Switch the way the player is labelled as facing.
             m_facingRight = !m_facingRight;
@@ -92,7 +93,6 @@ namespace Player2D
             theScale.x *= -1;
             transform.localScale = theScale;
         }
-
 
         public IEnumerator Taunt() {
             // Check the random chance of taunting.

@@ -43,7 +43,7 @@ public class UIManager : MonoBehaviour {
 
     // Starts the game from the main menu
     public void GameStart() {
-        //do shit idk
+        SceneManager.LoadScene("Level1");
     }
 
     // Opens the settings menu
@@ -94,9 +94,9 @@ public class UIManager : MonoBehaviour {
             GameManager.Instance.m_effectSources[0].Play(0);
         } else {
             if (!pauseMenu.activeSelf) {
-                GameManager.Instance.m_effectSources[0].clip = m_menuClose;
-            } else {
                 GameManager.Instance.m_effectSources[0].clip = m_menuOpen;
+            } else {
+                GameManager.Instance.m_effectSources[0].clip = m_menuClose;
             }
 
             GameManager.Instance.m_effectSources[0].Play(0);
