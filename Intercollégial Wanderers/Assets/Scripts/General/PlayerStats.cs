@@ -5,27 +5,27 @@ using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour {
 
-    public float m_maxHealth;     // The player's maximum health
-    public float m_health;        // The player's current health
-    public float m_maxSpeed;      // The player's maximum speed
-    public float m_speed;         // The player's current speed
-    public float m_maxHeat;       // The player's maximum heat
-    public float m_heatRate;      // The player's overheat/sec rate
-    public float m_heat;          // The player's current heat
-    public float m_fireRate;      // The player's current firing rate/sec
-    public float m_height;        // The player's current flying height
-    public bool m_isStopped;      // If the player is currently stopped
-    public bool m_isShooting;     // If the player is currently shooting
-    public bool m_isJumping;      // If the player is currently jumping
-    public bool m_isFlying;       // If the player is currently flying
-    public bool m_speedDisabled;  // If the player's speed meter is disabled
-    public bool m_shootDisabled;  // If the player's shooting is disabled
-    public bool m_heightDisabled; // If the player's height meter is disabled
-    public bool m_flyDisabled;    // If the player's flying is disabled
-    public bool m_stopDisabled;   // If the player's stopping is disabled
-    public bool m_jumpDisabled;   // If the player's jumping is disabled
-    public bool m_updateSliders;  // Used by sliders to know whether or not sliders need to be updated
-    private UIManager m_uiManager;
+    public float m_maxHealth;      // The player's maximum health
+    public float m_health;         // The player's current health
+    public float m_maxSpeed;       // The player's maximum speed
+    public float m_speed;          // The player's current speed
+    public float m_maxHeat;        // The player's maximum heat
+    public float m_heatRate;       // The player's overheat/sec rate
+    public float m_heat;           // The player's current heat
+    public float m_fireRate;       // The player's current firing rate/sec
+    public float m_height;         // The player's current flying height
+    public bool m_isStopped;       // If the player is currently stopped
+    public bool m_isShooting;      // If the player is currently shooting
+    public bool m_isJumping;       // If the player is currently jumping
+    public bool m_isFlying;        // If the player is currently flying
+    public bool m_speedDisabled;   // If the player's speed meter is disabled
+    public bool m_shootDisabled;   // If the player's shooting is disabled
+    public bool m_heightDisabled;  // If the player's height meter is disabled
+    public bool m_flyDisabled;     // If the player's flying is disabled
+    public bool m_stopDisabled;    // If the player's stopping is disabled
+    public bool m_jumpDisabled;    // If the player's jumping is disabled
+    public bool m_updateSliders;   // Used by sliders to know whether or not sliders need to be updated
+    private UIManager m_uiManager; // A local instance of the UI Manager to update sliders
 
     void Start() {
         // values are saved in PlayerPrefs to allow for easy transfer between levels
@@ -90,7 +90,7 @@ public class PlayerStats : MonoBehaviour {
         m_maxSpeed = p_maxSpeed;
         PlayerPrefs.SetFloat("maxSpeed", p_maxSpeed);
 
-        if(m_updateSliders) {
+        if (m_updateSliders) {
             m_uiManager.FindElement("speed").GetComponent<Slider>().maxValue = p_maxSpeed;
         }
     }

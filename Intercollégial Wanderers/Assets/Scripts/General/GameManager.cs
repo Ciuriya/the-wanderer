@@ -15,8 +15,7 @@ public class GameManager : MonoBehaviour {
     // The instance of the player's stats
     private static PlayerStats m_playerStats;
     public static PlayerStats PlayerStats {
-        get
-        {
+        get {
             return m_playerStats;
         }
     }
