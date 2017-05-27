@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Player2D;
+using System;
 
 public class InputController : MonoBehaviour {
 
@@ -13,12 +14,14 @@ public class InputController : MonoBehaviour {
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            GameManager.UIManager.TogglePause();
-        }
-
         if (Input.GetKeyDown(KeyCode.Space)) {
             Jump();
+        }
+
+        long currentMillis = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+        if (Input.GetKeyDown(KeyCode.Escape) && currentMillis - GameManager.UIManager.m_lastPause > GameManager.UIManager.m_pauseCooldown * 1000) {
+            GameManager.UIManager.TogglePause();
         }
     }
 

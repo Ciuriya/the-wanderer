@@ -1,4 +1,5 @@
 ﻿using Player2D;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,11 @@ public class UIManager : MonoBehaviour {
     public List<UIElement> m_elements; // The list of UI Elements to manage
     public AudioClip m_menuOpen;       // The menu opening sound
     public AudioClip m_menuClose;      // The menu closing sound
+
+    [HideInInspector]
+    public long m_lastPause;           // The last pause time
+
+    public float m_pauseCooldown;      // The pause button cooldown
     private bool m_volumeLoaded;       // If the volume options are loaded, the UI Manager loads before the Game Manager which causes issues
 
     void Start() {
@@ -59,6 +65,8 @@ public class UIManager : MonoBehaviour {
 
     // Toggles the pause menu on or off
     public void TogglePause() {
+        m_lastPause = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
         GameObject pauseMenu = FindElement("pause");
         GameObject settingsMenu = FindElement("settings");
         GameObject mainMenu = FindElement("menu");
