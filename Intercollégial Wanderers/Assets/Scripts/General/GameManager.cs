@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-	void Start() {
+    void Start() {
         m_manager = gameObject.GetComponent<GameManager>();
         m_playerStats = gameObject.AddComponent<PlayerStats>();
 	}
