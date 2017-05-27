@@ -7,8 +7,6 @@ public class PlayerStats : MonoBehaviour {
 
     public float m_maxHealth;      // The player's maximum health
     public float m_health;         // The player's current health
-    public float m_maxSpeed;       // The player's maximum speed
-    public float m_speed;          // The player's current speed
     public float m_maxHeat;        // The player's maximum heat
     public float m_heatRate;       // The player's overheat/sec rate
     public float m_heat;           // The player's current heat
@@ -18,7 +16,8 @@ public class PlayerStats : MonoBehaviour {
     public bool m_isShooting;      // If the player is currently shooting
     public bool m_isJumping;       // If the player is currently jumping
     public bool m_isFlying;        // If the player is currently flying
-    public bool m_speedDisabled;   // If the player's speed meter is disabled
+    public bool m_isBoosting;      // If the player is currently boosting
+    public bool m_boostDisabled;   // If the player's boosting is disabled
     public bool m_shootDisabled;   // If the player's shooting is disabled
     public bool m_heightDisabled;  // If the player's height meter is disabled
     public bool m_flyDisabled;     // If the player's flying is disabled
@@ -31,8 +30,6 @@ public class PlayerStats : MonoBehaviour {
         // values are saved in PlayerPrefs to allow for easy transfer between levels
         m_maxHealth = PlayerPrefs.GetFloat("maxHealth", 100f);
         m_health = PlayerPrefs.GetFloat("health", 100f);
-        m_maxSpeed = PlayerPrefs.GetFloat("maxSpeed", 1f);
-        m_speed = PlayerPrefs.GetFloat("speed", 1f);
         m_maxHeat = PlayerPrefs.GetFloat("maxHeat", 1f);
         m_heatRate = PlayerPrefs.GetFloat("heatRate", 0.1f);
         m_heat = PlayerPrefs.GetFloat("heat", 0f);
@@ -42,7 +39,8 @@ public class PlayerStats : MonoBehaviour {
         m_isShooting = false;
         m_isJumping = false;
         m_isFlying = false;
-        m_speedDisabled = PlayerPrefs.GetInt("speedDisabled", 0) == 1;
+        m_isBoosting = false;
+        m_boostDisabled = PlayerPrefs.GetInt("boostDisabled", 0) == 1;
         m_shootDisabled = PlayerPrefs.GetInt("shootDisabled", 0) == 1;
         m_heightDisabled = PlayerPrefs.GetInt("heightDisabled", 0) == 1;
         m_flyDisabled = PlayerPrefs.GetInt("flyDisabled", 0) == 1;
@@ -51,23 +49,42 @@ public class PlayerStats : MonoBehaviour {
         m_uiManager = GameObject.FindWithTag("UI_Manager").GetComponent<UIManager>();
         m_updateSliders = true;
 
-        Slider speedSlider = m_uiManager.FindElement("speed").GetComponent<Slider>();
-        speedSlider.value = m_speed;
-        speedSlider.maxValue = m_maxSpeed;
-        speedSlider.gameObject.SetActive(!m_speedDisabled);
+        if (m_uiManager.FindElement("cooling") != null) {
+            Slider coolingSlider = m_uiManager.FindElement("cooling").GetComponent<Slider>();
+            coolingSlider.value = m_heat;
+            coolingSlider.maxValue = m_maxHeat;
 
-        Slider coolingSlider = m_uiManager.FindElement("cooling").GetComponent<Slider>();
-        coolingSlider.value = m_heat;
-        coolingSlider.maxValue = m_maxHeat;
+            Slider heightSlider = m_uiManager.FindElement("height").GetComponent<Slider>();
+            heightSlider.value = m_height;
+            heightSlider.gameObject.SetActive(!m_heightDisabled);
 
-        Slider heightSlider = m_uiManager.FindElement("height").GetComponent<Slider>();
-        heightSlider.value = m_height;
-        heightSlider.gameObject.SetActive(!m_heightDisabled);
+            m_uiManager.FindElement("boost").SetActive(!m_boostDisabled);
+            m_uiManager.FindElement("shoot").SetActive(!m_shootDisabled);
+            m_uiManager.FindElement("fly").SetActive(!m_flyDisabled);
+            m_uiManager.FindElement("stop").SetActive(!m_stopDisabled);
+            m_uiManager.FindElement("jump").SetActive(!m_jumpDisabled);
+        }
+    }
 
-        m_uiManager.FindElement("shoot").SetActive(!m_shootDisabled);
-        m_uiManager.FindElement("fly").SetActive(!m_flyDisabled);
-        m_uiManager.FindElement("stop").SetActive(!m_stopDisabled);
-        m_uiManager.FindElement("jump").SetActive(!m_jumpDisabled);
+    public void ResetStats() {
+        setMaxHealth(100f);
+        setHealth(100f);
+        setMaxHeat(1f);
+        setHeatRate(0.1f);
+        setHeat(0f);
+        setFireRate(1f);
+        setHeight(1f);
+        m_isStopped = false;
+        m_isShooting = false;
+        m_isJumping = false;
+        m_isFlying = false;
+        m_isBoosting = false;
+        setBoostDisabled(false);
+        setHeightDisabled(false);
+        setShootDisabled(false);
+        setFlyDisabled(false);
+        setStopDisabled(false);
+        setJumpDisabled(false);
     }
 
     public void setMaxHealth(float p_maxHealth) {
@@ -78,36 +95,12 @@ public class PlayerStats : MonoBehaviour {
     public void setHealth(float p_health) {
         float health = p_health;
 
-        if (p_health > m_maxHealth){
+        if (p_health > m_maxHealth) {
             health = m_maxHealth;
         }
 
         m_health = health;
         PlayerPrefs.SetFloat("health", health);
-    }
-
-    public void setMaxSpeed(float p_maxSpeed) {
-        m_maxSpeed = p_maxSpeed;
-        PlayerPrefs.SetFloat("maxSpeed", p_maxSpeed);
-
-        if (m_updateSliders) {
-            m_uiManager.FindElement("speed").GetComponent<Slider>().maxValue = p_maxSpeed;
-        }
-    }
-
-    public void setSpeed(float p_speed) {
-        float speed = p_speed;
-
-        if (p_speed > m_maxSpeed) {
-            speed = m_maxSpeed;
-        }
-
-        m_speed = speed;
-        PlayerPrefs.SetFloat("speed", speed);
-
-        if (m_updateSliders) {
-            m_uiManager.FindElement("speed").GetComponent<Slider>().value = speed;
-        }
     }
 
     public void setMaxHeat(float p_maxHeat) {
@@ -153,12 +146,12 @@ public class PlayerStats : MonoBehaviour {
         }
     }
 
-    public void setSpeedDisabled(bool p_disabled) {
-        m_speedDisabled = p_disabled;
-        PlayerPrefs.SetInt("speedDisabled", p_disabled ? 1 : 0);
+    public void setBoostDisabled(bool p_disabled) {
+        m_boostDisabled = p_disabled;
+        PlayerPrefs.SetInt("boostDisabled", p_disabled ? 1 : 0);
 
         if (m_updateSliders) {
-            m_uiManager.FindElement("speed").SetActive(!p_disabled);
+            m_uiManager.FindElement("boost").SetActive(!p_disabled);
         }
     }
 
