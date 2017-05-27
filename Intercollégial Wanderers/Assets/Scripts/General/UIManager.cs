@@ -169,6 +169,7 @@ public class UIManager : MonoBehaviour {
     public void Shoot() {
         FindElement("shoot").SetActive(false);
         GameManager.PlayerStats.m_isShooting = true;
+        GameManager.InputController.GetPlayer().Shoot();
     }
 
     // The method used by the fly button to fly

@@ -125,7 +125,7 @@ public class PlayerStats : MonoBehaviour {
         m_life -= p_amount;
 
         if (m_life <= 0) {
-            GameObject.FindWithTag("Player").GetComponent<Player>().Kill();
+            GameManager.InputController.GetPlayer().Kill();
         }
     }
 

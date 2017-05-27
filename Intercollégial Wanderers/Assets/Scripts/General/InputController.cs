@@ -9,7 +9,7 @@ public class InputController : MonoBehaviour {
     private PlayerController m_controller; // The controller
 
     void Start() {
-        if (GameManager.UIManager.FindElement("menu") == null) {
+        if (GameManager.UIManager && GameManager.UIManager.FindElement("menu") == null) {
             m_player = GameObject.FindWithTag("Player").GetComponent<Player>();
             m_controller = m_player.gameObject.GetComponent<PlayerController>();
         }
@@ -28,9 +28,9 @@ public class InputController : MonoBehaviour {
     }
 
     public void Jump() {
-        if (!GameManager.PlayerStats.m_isJumping && m_controller.IsGrounded()) {
+        if (m_controller != null && !GameManager.PlayerStats.m_isJumping && m_controller.IsGrounded()) {
             GameManager.PlayerStats.m_isJumping = true;
-            m_player.gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, m_controller.m_jumpForce));
+            m_player.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, m_controller.m_jumpForce));
             GameManager.UIManager.FindElement("jump").SetActive(false);
         }
     }
