@@ -10,7 +10,16 @@ public class UIManager : MonoBehaviour {
     public List<UIElement> m_elements;
 
     void Start() {
-        FindElement("pause").SetActive(false);
+        GameObject pauseMenu = FindElement("pause");
+
+        if (pauseMenu != null) {
+            pauseMenu.SetActive(false);
+        }
+    }
+
+
+    public void GameStart() {
+        //do shit idk
     }
 
     public void TogglePause() {
