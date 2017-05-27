@@ -6,10 +6,12 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
 
-    // The list of UI Elements to manage
-    public List<UIElement> m_elements;
+    public List<UIElement> m_elements; // The list of UI Elements to manage
+    private bool m_volumeLoaded;       // If the volume options are loaded, the UI Manager loads before the Game Manager which causes issues
 
     void Start() {
+        m_volumeLoaded = false;
+
         GameObject pauseMenu = FindElement("pause");
         GameObject settingsMenu = FindElement("settings");
 
@@ -20,27 +22,53 @@ public class UIManager : MonoBehaviour {
         if (settingsMenu != null) {
             settingsMenu.SetActive(false);
         }
-
-        MusicSlider(PlayerPrefs.GetFloat("music"));
-        EffectSlider(PlayerPrefs.GetFloat("effects"));
     }
 
+    void Update() {
+        if (!m_volumeLoaded) {
+            m_volumeLoaded = true;
+            MusicSlider(PlayerPrefs.GetFloat("music"));
+            EffectSlider(PlayerPrefs.GetFloat("effects"));
+        }
+    }
 
+    // Starts the game from the main menu
     public void GameStart() {
         //do shit idk
     }
 
+    // Opens the settings menu
     public void OpenSettings() {
-        FindElement("pause").SetActive(false);
-        FindElement("settings").SetActive(true);
+        GameObject pauseMenu = FindElement("pause");
+        GameObject settingsMenu = FindElement("settings");
+        GameObject mainMenu = FindElement("menu");
+
+        if (pauseMenu != null) {
+            pauseMenu.SetActive(false);
+        }
+
+        if (mainMenu != null) {
+            mainMenu.SetActive(false);
+        }
+
+        settingsMenu.SetActive(true);
     }
 
+    // Toggles the pause menu on or off
     public void TogglePause() {
         GameObject pauseMenu = FindElement("pause");
         GameObject settingsMenu = FindElement("settings");
+        GameObject mainMenu = FindElement("menu");
+
+        if (mainMenu != null) {
+            mainMenu.SetActive(true);
+            settingsMenu.SetActive(false);
+            return;
+        }
 
         if (settingsMenu.activeSelf) {
-            settingsMenu.SetActive(!settingsMenu.activeSelf);
+            settingsMenu.SetActive(false);
+            pauseMenu.SetActive(true);
         } else {
             pauseMenu.SetActive(!pauseMenu.activeSelf);
         }
@@ -48,10 +76,12 @@ public class UIManager : MonoBehaviour {
         GameManager.m_gamePaused = pauseMenu.activeSelf || settingsMenu.activeSelf;
     }
 
+    // Loads the main menu from the pause menu
     public void MainMenu() {
         SceneManager.LoadScene("MainMenu");
     }
 
+    // Exits the game
     public void Exit() {
         Application.Quit();
     }

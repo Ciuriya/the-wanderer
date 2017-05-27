@@ -49,19 +49,21 @@ public class PlayerStats : MonoBehaviour {
         m_uiManager = GameObject.FindWithTag("UI_Manager").GetComponent<UIManager>();
         m_updateSliders = true;
 
-        Slider coolingSlider = m_uiManager.FindElement("cooling").GetComponent<Slider>();
-        coolingSlider.value = m_heat;
-        coolingSlider.maxValue = m_maxHeat;
+        if (m_uiManager.FindElement("cooling") != null) {
+            Slider coolingSlider = m_uiManager.FindElement("cooling").GetComponent<Slider>();
+            coolingSlider.value = m_heat;
+            coolingSlider.maxValue = m_maxHeat;
 
-        Slider heightSlider = m_uiManager.FindElement("height").GetComponent<Slider>();
-        heightSlider.value = m_height;
-        heightSlider.gameObject.SetActive(!m_heightDisabled);
+            Slider heightSlider = m_uiManager.FindElement("height").GetComponent<Slider>();
+            heightSlider.value = m_height;
+            heightSlider.gameObject.SetActive(!m_heightDisabled);
 
-        m_uiManager.FindElement("boost").SetActive(!m_boostDisabled);
-        m_uiManager.FindElement("shoot").SetActive(!m_shootDisabled);
-        m_uiManager.FindElement("fly").SetActive(!m_flyDisabled);
-        m_uiManager.FindElement("stop").SetActive(!m_stopDisabled);
-        m_uiManager.FindElement("jump").SetActive(!m_jumpDisabled);
+            m_uiManager.FindElement("boost").SetActive(!m_boostDisabled);
+            m_uiManager.FindElement("shoot").SetActive(!m_shootDisabled);
+            m_uiManager.FindElement("fly").SetActive(!m_flyDisabled);
+            m_uiManager.FindElement("stop").SetActive(!m_stopDisabled);
+            m_uiManager.FindElement("jump").SetActive(!m_jumpDisabled);
+        }
     }
 
     public void ResetStats() {

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -37,5 +38,10 @@ public class GameManager : MonoBehaviour {
         m_manager = gameObject.GetComponent<GameManager>();
         m_playerStats = gameObject.AddComponent<PlayerStats>();
         m_inputController = gameObject.AddComponent<InputController>();
+
+        // This is the main menu, so we want to reset everything for future use
+        if (GameObject.FindWithTag("UI_Manager").GetComponent<UIManager>().FindElement("menu") != null) {
+            m_playerStats.ResetStats();
+        }
 	}
 }
