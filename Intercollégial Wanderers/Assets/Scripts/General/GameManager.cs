@@ -20,8 +20,20 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    // The instance of the player's input controller
+    private static InputController m_inputController;
+    public static InputController InputController {
+        get {
+            return m_inputController;
+        }
+    }
+
+    public static bool m_gamePaused; // If game is currently paused
+
     void Start() {
+        m_gamePaused = false;
         m_manager = gameObject.GetComponent<GameManager>();
         m_playerStats = gameObject.AddComponent<PlayerStats>();
+        m_inputController = gameObject.AddComponent<InputController>();
 	}
 }
