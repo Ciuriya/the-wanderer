@@ -11,10 +11,18 @@ public class UIManager : MonoBehaviour {
 
     void Start() {
         GameObject pauseMenu = FindElement("pause");
+        GameObject settingsMenu = FindElement("settings");
 
         if (pauseMenu != null) {
             pauseMenu.SetActive(false);
         }
+
+        if (settingsMenu != null) {
+            settingsMenu.SetActive(false);
+        }
+
+        MusicSlider(PlayerPrefs.GetFloat("music"));
+        EffectSlider(PlayerPrefs.GetFloat("effects"));
     }
 
 
@@ -22,10 +30,22 @@ public class UIManager : MonoBehaviour {
         //do shit idk
     }
 
+    public void OpenSettings() {
+        FindElement("pause").SetActive(false);
+        FindElement("settings").SetActive(true);
+    }
+
     public void TogglePause() {
         GameObject pauseMenu = FindElement("pause");
-        pauseMenu.SetActive(!pauseMenu.activeSelf);
-        GameManager.m_gamePaused = pauseMenu.activeSelf;
+        GameObject settingsMenu = FindElement("settings");
+
+        if (settingsMenu.activeSelf) {
+            settingsMenu.SetActive(!settingsMenu.activeSelf);
+        } else {
+            pauseMenu.SetActive(!pauseMenu.activeSelf);
+        }
+
+        GameManager.m_gamePaused = pauseMenu.activeSelf || settingsMenu.activeSelf;
     }
 
     public void MainMenu() {
@@ -34,6 +54,28 @@ public class UIManager : MonoBehaviour {
 
     public void Exit() {
         Application.Quit();
+    }
+
+    // The method used by the music slider in settings to modify the music's volume in the game
+    public void MusicSlider(float p_value) {
+        PlayerPrefs.SetFloat("music", p_value);
+        FindElement("musicLabel").GetComponent<Text>().text = ((int) p_value).ToString() + "%";
+        FindElement("music").GetComponent<Slider>().value = p_value;
+
+        foreach (AudioSource source in GameManager.Instance.m_musicSources) {
+            source.volume = p_value / 100;
+        }
+    }
+
+    // The method used by the effect slider in settings to modify the effects' volume in the game
+    public void EffectSlider(float p_value) {
+        PlayerPrefs.SetFloat("effects", p_value);
+        FindElement("effectsLabel").GetComponent<Text>().text = ((int) p_value).ToString() + "%";
+        FindElement("effects").GetComponent<Slider>().value = p_value;
+
+        foreach (AudioSource source in GameManager.Instance.m_effectSources) {
+            source.volume = p_value / 100;
+        }
     }
 
     // The method used by the height slider to increment/decrement the speed value

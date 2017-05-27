@@ -28,7 +28,9 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public static bool m_gamePaused; // If game is currently paused
+    public static bool m_gamePaused;          // If game is currently paused
+    public List<AudioSource> m_musicSources;  // All musical audio sources currently used in the game
+    public List<AudioSource> m_effectSources; // All effect audio sources currently used in the game
 
     void Start() {
         m_gamePaused = false;
