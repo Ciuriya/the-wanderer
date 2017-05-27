@@ -9,8 +9,9 @@ public abstract class Entity : MonoBehaviour {
     protected float m_fireRate;              // The entity's fire rate
     protected bool m_canShoot;               // If the entity can shoot
     protected bool m_isDead;                 // If the entity is dead
+    public Projectile m_projectile;          // The projectile shot by the entity
     public bool m_canDie;                    // If the entity can die
-    private long m_lastShot;                 // The time of the entity's last shot
+    protected long m_lastShot;                // The time of the entity's last shot
     public List<Effect> m_effectsGivenOff;   // Effects given off by this entity
 
     void Start() {
@@ -30,18 +31,17 @@ public abstract class Entity : MonoBehaviour {
     }
 
     // Handles the entity's shooting process
-    public void Shoot() {
+    public virtual void Shoot() {
         long currentMillis = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
         // If the entity can fire again, we shoot (fireRate is in seconds)
         if (m_canShoot && currentMillis - m_lastShot > m_fireRate * 1000) {
             m_lastShot = currentMillis;
-            ShootProjectile();
+
+            GameObject bullet = Instantiate(m_projectile.gameObject, transform.position, Quaternion.identity) as GameObject;
+            bullet.GetComponent<Rigidbody>().AddForce(transform.forward * 10);
         }
     }
-
-    // Shoots the projectile
-    protected abstract void ShootProjectile();
 
     // Kills the entity
     public void Kill() {
