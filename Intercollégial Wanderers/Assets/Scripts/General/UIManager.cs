@@ -75,6 +75,9 @@ public class UIManager : MonoBehaviour {
             if (!mainMenu.activeSelf) {
                 GameManager.Instance.m_effectSources[0].clip = m_menuOpen;
                 GameManager.Instance.m_effectSources[0].Play(0);
+            } else {
+                GameManager.Instance.m_effectSources[0].clip = m_menuClose;
+                GameManager.Instance.m_effectSources[0].Play(0);
             }
 
             mainMenu.SetActive(true);
@@ -166,6 +169,7 @@ public class UIManager : MonoBehaviour {
     public void Shoot() {
         FindElement("shoot").SetActive(false);
         GameManager.PlayerStats.m_isShooting = true;
+        GameManager.InputController.GetPlayer().Shoot();
     }
 
     // The method used by the fly button to fly

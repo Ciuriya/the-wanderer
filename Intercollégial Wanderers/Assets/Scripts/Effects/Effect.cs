@@ -7,7 +7,7 @@ public abstract class Effect : MonoBehaviour {
 
     protected string m_name;                   // The effect's name
     public List<TriggerEvent> m_triggerEvents; // The events that will trigger this effect
-    public float m_strength;                   // The strength of the effect, a multiplier
+    public int m_strength;                   // The strength of the effect, a multiplier
     public float m_triggerChance;              // Percentage of triggering on the affected entity
     public float m_cooldownLength;             // Time between effect triggers in seconds
     public Entity m_holder;                    // The holder of the effect, the giver

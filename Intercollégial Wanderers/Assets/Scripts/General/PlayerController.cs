@@ -29,8 +29,6 @@ namespace Player2D
         private bool m_grounded = false;          // Whether or not the player is grounded.
         private Animator m_anim;                  // Reference to the player's animator component.
 
-
-
         void Awake()
         {
             // Setting up references.
@@ -74,8 +72,6 @@ namespace Player2D
                 // Play a random jump audio clip.
                 int i = UnityEngine.Random.Range(0, m_jumpClips.Length);
                 AudioSource.PlayClipAtPoint(m_jumpClips[i], transform.position);
-
-                GameManager.InputController.Jump();
             }
 
             // We hit an object

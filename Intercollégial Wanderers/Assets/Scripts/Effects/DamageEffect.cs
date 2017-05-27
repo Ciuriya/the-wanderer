@@ -10,6 +10,6 @@ public class DamageEffect : Effect {
 
     // Applies the effect to the affected entity
     protected override void Apply(Entity p_affected) {
-        p_affected.Kill();
+        p_affected.Damage(m_strength);
     }
 }
