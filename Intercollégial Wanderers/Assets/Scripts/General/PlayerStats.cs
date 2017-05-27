@@ -64,6 +64,27 @@ public class PlayerStats : MonoBehaviour {
         m_uiManager.FindElement("jump").SetActive(!m_jumpDisabled);
     }
 
+    public void ResetStats() {
+        setMaxHealth(100f);
+        setHealth(100f);
+        setMaxHeat(1f);
+        setHeatRate(0.1f);
+        setHeat(0f);
+        setFireRate(1f);
+        setHeight(1f);
+        m_isStopped = false;
+        m_isShooting = false;
+        m_isJumping = false;
+        m_isFlying = false;
+        m_isBoosting = false;
+        setBoostDisabled(false);
+        setHeightDisabled(false);
+        setShootDisabled(false);
+        setFlyDisabled(false);
+        setStopDisabled(false);
+        setJumpDisabled(false);
+    }
+
     public void setMaxHealth(float p_maxHealth) {
         m_maxHealth = p_maxHealth;
         PlayerPrefs.SetFloat("maxHealth", p_maxHealth);
