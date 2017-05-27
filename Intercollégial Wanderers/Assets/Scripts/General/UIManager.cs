@@ -43,7 +43,7 @@ public class UIManager : MonoBehaviour {
 
     // Starts the game from the main menu
     public void GameStart() {
-        //do shit idk
+        SceneManager.LoadScene("Level1");
     }
 
     // Opens the settings menu
@@ -75,6 +75,9 @@ public class UIManager : MonoBehaviour {
             if (!mainMenu.activeSelf) {
                 GameManager.Instance.m_effectSources[0].clip = m_menuOpen;
                 GameManager.Instance.m_effectSources[0].Play(0);
+            } else {
+                GameManager.Instance.m_effectSources[0].clip = m_menuClose;
+                GameManager.Instance.m_effectSources[0].Play(0);
             }
 
             mainMenu.SetActive(true);
@@ -91,9 +94,9 @@ public class UIManager : MonoBehaviour {
             GameManager.Instance.m_effectSources[0].Play(0);
         } else {
             if (!pauseMenu.activeSelf) {
-                GameManager.Instance.m_effectSources[0].clip = m_menuClose;
-            } else {
                 GameManager.Instance.m_effectSources[0].clip = m_menuOpen;
+            } else {
+                GameManager.Instance.m_effectSources[0].clip = m_menuClose;
             }
 
             GameManager.Instance.m_effectSources[0].Play(0);
@@ -166,6 +169,7 @@ public class UIManager : MonoBehaviour {
     public void Shoot() {
         FindElement("shoot").SetActive(false);
         GameManager.PlayerStats.m_isShooting = true;
+        GameManager.InputController.GetPlayer().Shoot();
     }
 
     // The method used by the fly button to fly

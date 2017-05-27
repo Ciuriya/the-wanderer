@@ -5,21 +5,49 @@ using UnityEngine.SceneManagement;
 
 public class Player : Entity {
 
+    private long m_deathTime;
+
     void Start() {
         m_name = "Player";
         m_canShoot = true;
         m_fireRate = 1f;
+        m_autoFire = false;
     }
 
     void Update() {
+        long currentMillis = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+        // Retry
+        if (m_deathTime > 0 && currentMillis - m_deathTime > GameManager.Instance.m_gameOverLength * 1000) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        if (PauseCheck()) return;
+
         m_canShoot = !GameManager.PlayerStats.m_shootDisabled;
         m_fireRate = GameManager.PlayerStats.m_fireRate;
+
+        if (currentMillis - m_lastShot > m_fireRate * 1000 && GameManager.PlayerStats.m_isShooting) {
+            GameManager.PlayerStats.m_isShooting = false;
+            GameManager.UIManager.FindElement("shoot").SetActive(true);
+        }
     }
 
     // Kills the entity
     protected override void Die() {
-        Destroy(gameObject);
-        SceneManager.LoadScene("MainMenu");
+        if (m_canDie) {
+            m_canDie = false;
+            GameManager.m_gamePaused = true;
+            m_deathTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+            GameManager.Instance.m_musicSources[0].clip = GameManager.Instance.m_gameOverSound;
+            GameManager.Instance.m_musicSources[0].Play(0);
+        }
+    }
+
+    // Damages the entity
+    public override void Damage(int p_amount) {
+        GameManager.PlayerStats.Damage(p_amount);
     }
 
     // Handles the entity's shooting process
@@ -31,12 +59,11 @@ public class Player : Entity {
         if (m_canShoot && currentMillis - m_lastShot > m_fireRate * 1000) {
             m_lastShot = currentMillis;
 
-            GameManager.UIManager.Shoot();
-            GameObject bullet = Instantiate(m_projectile.gameObject, transform.position, Quaternion.identity) as GameObject;
-            bullet.GetComponent<Rigidbody>().AddForce(transform.forward * 10);
+            GameObject bullet = Instantiate(m_projectile.gameObject, new Vector2(transform.position.x + 1f, transform.position.y + 0.2f), Quaternion.identity) as GameObject;
+            bullet.GetComponent<Projectile>().Shot();
+            bullet.GetComponent<Rigidbody2D>().AddForce(new Vector2(m_projectile.m_speed, 0));
 
-            GameManager.PlayerStats.m_isShooting = false;
-            GameManager.UIManager.FindElement("shoot").SetActive(true);
+            AudioSource.PlayClipAtPoint(m_shootSound, transform.position);
         }
     }
 }
