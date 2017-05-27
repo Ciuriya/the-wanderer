@@ -26,7 +26,6 @@ public class PlayerStats : MonoBehaviour {
     public bool m_stopDisabled;         // If the player's stopping is disabled
     public bool m_jumpDisabled;         // If the player's jumping is disabled
     public bool m_updateSliders;        // Used by sliders to know whether or not sliders need to be updated
-    private UIManager m_uiManager;      // A local instance of the UI Manager to update sliders
 
     void Start() {
         // values are saved in PlayerPrefs to allow for easy transfer between levels
@@ -48,23 +47,22 @@ public class PlayerStats : MonoBehaviour {
         m_flyDisabled = PlayerPrefs.GetInt("flyDisabled", 0) == 1;
         m_stopDisabled = PlayerPrefs.GetInt("stopDisabled", 0) == 1;
         m_jumpDisabled = PlayerPrefs.GetInt("jumpDisabled", 0) == 1;
-        m_uiManager = GameObject.FindWithTag("UI_Manager").GetComponent<UIManager>();
         m_updateSliders = true;
 
-        if (m_uiManager.FindElement("cooling") != null) {
-            Slider coolingSlider = m_uiManager.FindElement("cooling").GetComponent<Slider>();
+        if (GameManager.UIManager && GameManager.UIManager.FindElement("menu") == null) {
+            Slider coolingSlider = GameManager.UIManager.FindElement("cooling").GetComponent<Slider>();
             coolingSlider.value = m_heat;
             coolingSlider.maxValue = m_maxHeat;
 
-            Slider heightSlider = m_uiManager.FindElement("height").GetComponent<Slider>();
+            Slider heightSlider = GameManager.UIManager.FindElement("height").GetComponent<Slider>();
             heightSlider.value = m_height;
             heightSlider.gameObject.SetActive(!m_heightDisabled);
 
-            m_uiManager.FindElement("boost").SetActive(!m_boostDisabled);
-            m_uiManager.FindElement("shoot").SetActive(!m_shootDisabled);
-            m_uiManager.FindElement("fly").SetActive(!m_flyDisabled);
-            m_uiManager.FindElement("stop").SetActive(!m_stopDisabled);
-            m_uiManager.FindElement("jump").SetActive(!m_jumpDisabled);
+            GameManager.UIManager.FindElement("boost").SetActive(!m_boostDisabled);
+            GameManager.UIManager.FindElement("shoot").SetActive(!m_shootDisabled);
+            GameManager.UIManager.FindElement("fly").SetActive(!m_flyDisabled);
+            GameManager.UIManager.FindElement("stop").SetActive(!m_stopDisabled);
+            GameManager.UIManager.FindElement("jump").SetActive(!m_jumpDisabled);
         }
     }
 
@@ -118,13 +116,17 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetInt("life", life);
     }
 
-    public void damage(int p_amount) {
+    public void Damage(int p_amount) {
         if (m_hitCooldown <= 0 && p_amount > m_life) {
             p_amount = m_life;
             m_hitCooldown = m_initialHitCooldown;
         }
 
         m_life -= p_amount;
+
+        if (m_life <= 0) {
+            GameObject.FindWithTag("Player").GetComponent<Player>().Kill();
+        }
     }
 
     public void setMaxHeat(float p_maxHeat) {
@@ -132,7 +134,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetFloat("maxHeat", p_maxHeat);
 
         if (m_updateSliders) {
-            m_uiManager.FindElement("cooling").GetComponent<Slider>().maxValue = p_maxHeat;
+            GameManager.UIManager.FindElement("cooling").GetComponent<Slider>().maxValue = p_maxHeat;
         }
     }
 
@@ -152,7 +154,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetFloat("heat", heat);
 
         if (m_updateSliders) {
-            m_uiManager.FindElement("cooling").GetComponent<Slider>().value = heat;
+            GameManager.UIManager.FindElement("cooling").GetComponent<Slider>().value = heat;
         }
     }
 
@@ -171,7 +173,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetFloat("height", p_height);
 
         if (m_updateSliders) {
-            m_uiManager.FindElement("height").GetComponent<Slider>().value = p_height;
+            GameManager.UIManager.FindElement("height").GetComponent<Slider>().value = p_height;
         }
     }
 
@@ -180,7 +182,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetInt("boostDisabled", p_disabled ? 1 : 0);
 
         if (m_updateSliders) {
-            m_uiManager.FindElement("boost").SetActive(!p_disabled);
+            GameManager.UIManager.FindElement("boost").SetActive(!p_disabled);
         }
     }
 
@@ -189,7 +191,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetInt("shootDisabled", p_disabled ? 1 : 0);
 
         if (m_updateSliders) {
-            m_uiManager.FindElement("shoot").SetActive(!p_disabled);
+            GameManager.UIManager.FindElement("shoot").SetActive(!p_disabled);
         }
     }
 
@@ -198,7 +200,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetInt("heightDisabled", p_disabled ? 1 : 0);
 
         if (m_updateSliders) {
-            m_uiManager.FindElement("height").SetActive(!p_disabled);
+            GameManager.UIManager.FindElement("height").SetActive(!p_disabled);
         }
     }
 
@@ -207,7 +209,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetInt("flyDisabled", p_disabled ? 1 : 0);
 
         if (m_updateSliders) {
-            m_uiManager.FindElement("fly").SetActive(!p_disabled);
+            GameManager.UIManager.FindElement("fly").SetActive(!p_disabled);
         }
     }
 
@@ -216,7 +218,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetInt("stopDisabled", p_disabled ? 1 : 0);
 
         if (m_updateSliders) {
-            m_uiManager.FindElement("stop").SetActive(!p_disabled);
+            GameManager.UIManager.FindElement("stop").SetActive(!p_disabled);
         }
     }
 
@@ -225,7 +227,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetInt("jumpDisabled", p_disabled ? 1 : 0);
 
         if (m_updateSliders) {
-            m_uiManager.FindElement("jump").SetActive(!p_disabled);
+            GameManager.UIManager.FindElement("jump").SetActive(!p_disabled);
         }
     }
 }

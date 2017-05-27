@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.SceneManagement;
 
 public class Player : Entity {
 
@@ -18,7 +19,7 @@ public class Player : Entity {
     // Kills the entity
     protected override void Die() {
         Destroy(gameObject);
-        // throw back to main menu or something
+        SceneManager.LoadScene("MainMenu");
     }
 
     // Handles the entity's shooting process
@@ -30,10 +31,12 @@ public class Player : Entity {
         if (m_canShoot && currentMillis - m_lastShot > m_fireRate * 1000) {
             m_lastShot = currentMillis;
 
-            GameObject.FindWithTag("UI_Manager").GetComponent<UIManager>().Shoot();
+            GameManager.UIManager.Shoot();
             GameObject bullet = Instantiate(m_projectile.gameObject, transform.position, Quaternion.identity) as GameObject;
             bullet.GetComponent<Rigidbody>().AddForce(transform.forward * 10);
-            // stop shooting eventually idfk, #logic, I'll take a nap now
+
+            GameManager.PlayerStats.m_isShooting = false;
+            GameManager.UIManager.FindElement("shoot").SetActive(true);
         }
     }
 }
