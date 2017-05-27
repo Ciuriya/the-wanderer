@@ -78,7 +78,7 @@ public class PlayerStats : MonoBehaviour {
     public void setHealth(float p_health) {
         float health = p_health;
 
-        if (p_health > m_maxHealth){
+        if (p_health > m_maxHealth) {
             health = m_maxHealth;
         }
 
