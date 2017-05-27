@@ -9,11 +9,11 @@ public class PlayerStats : MonoBehaviour {
     private int m_life;                 // The player's current life
     public float m_maxHeat;             // The player's maximum heat
     private float m_heatRate;           // The player's overheat/sec rate
-    public float m_heat;                // The player's current heat
+    private float m_heat;               // The player's current heat
     public float m_initialHitCooldown;  // The player's initial hit cooldown time after being hit (in seconds)
     private float m_hitCooldown;        // The player's current cooldown time (in seconds)
     public float m_fireRate;            // The player's current firing rate/sec
-    public float m_height;              // The player's current flying height
+    private float m_height;             // The player's current flying height
     public bool m_isStopped;            // If the player is currently stopped
     public bool m_isShooting;           // If the player is currently shooting
     public bool m_isJumping;            // If the player is currently jumping
@@ -141,7 +141,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetFloat("heatRate", p_heatRate);
     }
 
-    public void setHeat(float p_heat) {
+    protected void setHeat(float p_heat) {
         float heat = p_heat;
 
         if (p_heat > m_maxHeat) {
@@ -159,6 +159,11 @@ public class PlayerStats : MonoBehaviour {
     public void setFireRate(float p_fireRate) {
         m_fireRate = p_fireRate;
         PlayerPrefs.SetFloat("fireRate", p_fireRate);
+    }
+
+    public float getHeight()
+    {
+        return m_height;
     }
 
     public void setHeight(float p_height) {
