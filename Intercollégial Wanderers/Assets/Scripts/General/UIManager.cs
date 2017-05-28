@@ -171,6 +171,8 @@ public class UIManager : MonoBehaviour {
     public void Boost() {
         FindElement("boost").SetActive(false);
         GameManager.PlayerStats.fillBoostTime();
+        GameManager.PlayerStats.increaseHeat();
+        // make sure to re-enable button later
     }
 
     // The method used by the jump button to jump
@@ -188,6 +190,7 @@ public class UIManager : MonoBehaviour {
     // The method used by the fly button to fly
     public void Fly() {
         GameManager.InputController.Fly();
+
     }
 
     // Finds an UI Element using its name

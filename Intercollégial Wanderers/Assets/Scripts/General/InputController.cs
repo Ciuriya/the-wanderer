@@ -96,7 +96,10 @@ public class InputController : MonoBehaviour {
             GameManager.PlayerStats.m_isFlying = true;
             GameManager.UIManager.HeightSlider(m_player.transform.position.y + 2f);
             m_player.GetComponent<Rigidbody2D>().gravityScale = 0;
-        } else if (GameManager.PlayerStats.m_isFlying && !GameManager.PlayerStats.m_flyDisabled) {
+            GameManager.PlayerStats.increaseHeat();
+        }
+        else if (GameManager.PlayerStats.m_isFlying && !GameManager.PlayerStats.m_flyDisabled)
+        {
             m_player.GetComponent<Rigidbody2D>().gravityScale = 1;
             GameManager.PlayerStats.m_isFlying = false;
         }

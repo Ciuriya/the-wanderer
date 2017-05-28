@@ -31,6 +31,12 @@ public class Player : Entity {
         if (currentMillis - m_lastShot > m_fireRate * 1000 && GameManager.PlayerStats.m_isShooting) {
             GameManager.PlayerStats.m_isShooting = false;
             GameManager.UIManager.FindElement("shoot").SetActive(true);
+            GameManager.PlayerStats.increaseHeat();
+        }
+
+        if (GameManager.PlayerStats.m_heat >= GameManager.PlayerStats.m_maxHeat)
+        {
+            Die();
         }
     }
 
@@ -38,6 +44,7 @@ public class Player : Entity {
     protected override void Die() {
         if (m_canDie) {
             m_canDie = false;
+            GameManager.PlayerStats.setMaxHeat(0f);
             GameManager.m_gamePaused = true;
             m_deathTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             GetComponent<Animator>().SetBool("IsDead", true);
