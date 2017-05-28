@@ -43,6 +43,7 @@ public class PlayerStats : MonoBehaviour {
         m_initBoostTime = PlayerPrefs.GetFloat("initBoostTime", 1.5f);
         m_boostTime = PlayerPrefs.GetFloat("boostTime", 0);
         m_shootDisabled = PlayerPrefs.GetInt("shootDisabled", 0) == 1;
+        m_boostDisabled = PlayerPrefs.GetInt("boostDisabled", 0) == 1;
         m_heightDisabled = PlayerPrefs.GetInt("heightDisabled", 0) == 1;
         m_flyDisabled = PlayerPrefs.GetInt("flyDisabled", 0) == 1;
         m_jumpDisabled = PlayerPrefs.GetInt("jumpDisabled", 0) == 1;
@@ -78,7 +79,7 @@ public class PlayerStats : MonoBehaviour {
         }
         else
         {
-            FindElement("boost").SetActive(true);
+            GameManager.UIManager.FindElement("boost").SetActive(true);
         }
     }
 
@@ -97,6 +98,7 @@ public class PlayerStats : MonoBehaviour {
         m_isJumping = false;
         m_isFlying = false;
         setHeightDisabled(false);
+        setBoostDisabled(false);
         setShootDisabled(false);
         setFlyDisabled(false);
         setJumpDisabled(false);
@@ -210,6 +212,16 @@ public class PlayerStats : MonoBehaviour {
         {
             m_boostTime = m_initBoostTime;
             m_boostDisabled = true;
+        }
+    }
+
+    public void setBoostDisabled(bool p_disabled) {
+        m_boostDisabled = p_disabled;
+        PlayerPrefs.SetInt("boostDisabled", p_disabled ? 1 : 0);
+
+        if (m_updateSliders)
+        {
+            GameManager.UIManager.FindElement("boost").SetActive(!p_disabled);
         }
     }
 
