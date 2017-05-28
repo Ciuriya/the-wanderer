@@ -78,7 +78,7 @@ public class PlayerStats : MonoBehaviour {
         if (m_boostTime > 0 && !GameManager.m_gamePaused) {
             m_boostTime -= Time.deltaTime;
         } else if (!m_boostDisabled && !GameManager.m_gamePaused) {
-            GameManager.UIManager.FindElement("boost").SetActive(true);
+            GameManager.UIManager.FindElement("boost").GetComponent<Button>().interactable = true;
         }
     }
 
@@ -225,7 +225,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetFloat("boostTime", p_boostTime);
 
         if (m_updateSliders) {
-            GameManager.UIManager.FindElement("boost").SetActive(m_initBoostTime > 0);
+            GameManager.UIManager.FindElement("boost").GetComponent<Button>().interactable = m_initBoostTime > 0;
         }
     }
 
