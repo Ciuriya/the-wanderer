@@ -27,7 +27,14 @@ public class Projectile : Entity {
     void OnCollisionEnter2D(Collision2D p_collision) {
         Collider2D collider = p_collision.collider;
 
+        // If the colliding object is an entity, trigger every contained effect that transfers via touch
+        if (collider.gameObject.name != gameObject.name &&
+            collider.gameObject.GetComponent<Entity>() != null) {
+            Effect.TriggerEffects(m_effectsGivenOff, collider.gameObject.GetComponent<Entity>(), TriggerEvent.TOUCH);
+        }
+
         GetComponent<AudioSource>().clip = m_shootSound;
+        GetComponent<AudioSource>().enabled = true;
         GetComponent<AudioSource>().Play(0);
 
         Die();
