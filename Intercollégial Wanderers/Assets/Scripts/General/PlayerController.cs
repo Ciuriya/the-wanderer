@@ -6,7 +6,6 @@ using System.Collections;
 
 namespace Player2D
 {
-    [RequireComponent(typeof(PlayerStats))]
     public class PlayerController : MonoBehaviour
     {
         private bool m_startedMoving;             // If the player started moving
