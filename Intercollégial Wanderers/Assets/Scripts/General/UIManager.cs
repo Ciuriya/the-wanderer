@@ -56,8 +56,8 @@ public class UIManager : MonoBehaviour {
     void Update() {
         if (!m_volumeLoaded) {
             m_volumeLoaded = true;
-            MusicSlider(PlayerPrefs.GetFloat("music"));
-            EffectSlider(PlayerPrefs.GetFloat("effects"));
+            MusicSlider(PlayerPrefs.GetFloat("music", 50f));
+            EffectSlider(PlayerPrefs.GetFloat("effects", 50f));
         }
     }
 
