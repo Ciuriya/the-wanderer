@@ -30,7 +30,12 @@ public class InputController : MonoBehaviour {
     public void Jump() {
         if (m_controller != null && !GameManager.PlayerStats.m_isJumping && m_controller.IsGrounded()) {
             GameManager.PlayerStats.m_isJumping = true;
+
+            m_player.GetComponent<AudioSource>().clip = m_player.m_jumpSound;
+            m_player.GetComponent<AudioSource>().Play();
+
             m_player.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, m_controller.m_jumpForce));
+
             GameManager.UIManager.FindElement("jump").SetActive(false);
         }
     }
