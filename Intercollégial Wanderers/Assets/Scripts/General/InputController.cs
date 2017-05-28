@@ -43,7 +43,7 @@ public class InputController : MonoBehaviour
 
         Slider heightSlider = GameManager.UIManager.FindElement("height").GetComponent<Slider>();
 
-        if (Input.GetKeyDown(KeyCode.W) !GameManager.PlayerStats.m_flyDisabled) {
+        if (Input.GetKeyDown(KeyCode.W) && !GameManager.PlayerStats.m_flyDisabled) {
             float desired = heightSlider.value + 0.25f;
 
             if (desired > heightSlider.maxValue)
