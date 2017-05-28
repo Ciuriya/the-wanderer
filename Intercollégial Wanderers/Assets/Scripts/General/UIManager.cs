@@ -177,7 +177,7 @@ public class UIManager : MonoBehaviour {
 
     // The method used by the boost button to boost
     public void Boost() {
-        if (!GameManager.m_gamePaused) {
+        if (!GameManager.m_gamePaused && GameManager.PlayerStats.m_boostTime <= 0) {
             FindElement("boost").GetComponent<Button>().interactable = false;
             GameManager.PlayerStats.fillBoostTime();
             GameManager.PlayerStats.increaseHeat();
