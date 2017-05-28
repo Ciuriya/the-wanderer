@@ -172,6 +172,7 @@ public class UIManager : MonoBehaviour {
         // insert boost code here or link it to the variable
         FindElement("boost").SetActive(false);
         GameManager.PlayerStats.fillBoostTime();
+        GameManager.PlayerStats.increaseHeat();
         // make sure to re-enable button later
     }
 

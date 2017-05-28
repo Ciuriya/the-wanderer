@@ -9,7 +9,7 @@ public class PlayerStats : MonoBehaviour {
     private int m_life;                 // The player's current life
     public float m_maxHeat;             // The player's maximum heat
     private float m_heatRate;           // The player's overheat/sec rate
-    private float m_heat;               // The player's current heat
+    public float m_heat;                // The player's current heat
     public float m_initialHitCooldown;  // The player's initial hit cooldown time after being hit (in seconds)
     private float m_hitCooldown;        // The player's current cooldown time (in seconds)
     public float m_fireRate;            // The player's current firing rate/sec
@@ -50,9 +50,9 @@ public class PlayerStats : MonoBehaviour {
         m_updateSliders = true;
 
         if (GameManager.UIManager && GameManager.UIManager.FindElement("menu") == null) {
-            Slider coolingSlider = GameManager.UIManager.FindElement("cooling").GetComponent<Slider>();
-            coolingSlider.value = m_heat;
-            coolingSlider.maxValue = m_maxHeat;
+            Slider heatingSlider = GameManager.UIManager.FindElement("heating").GetComponent<Slider>();
+            heatingSlider.value = m_heat;
+            heatingSlider.maxValue = m_maxHeat;
 
             Slider heightSlider = GameManager.UIManager.FindElement("height").GetComponent<Slider>();
             heightSlider.value = m_height;
@@ -142,7 +142,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetFloat("maxHeat", p_maxHeat);
 
         if (m_updateSliders) {
-            GameManager.UIManager.FindElement("cooling").GetComponent<Slider>().maxValue = p_maxHeat;
+            GameManager.UIManager.FindElement("heating").GetComponent<Slider>().maxValue = p_maxHeat;
         }
     }
 
@@ -162,7 +162,17 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetFloat("heat", heat);
 
         if (m_updateSliders) {
-            GameManager.UIManager.FindElement("cooling").GetComponent<Slider>().value = heat;
+            GameManager.UIManager.FindElement("heating").GetComponent<Slider>().value = heat;
+        }
+    }
+
+    public void increaseHeat()
+    {
+        m_heat += m_heatRate;
+
+        if (m_heat > m_maxHeat)
+        {
+            m_heat = m_maxHeat;
         }
     }
 
