@@ -35,6 +35,7 @@ public class LevelTransitioner : MonoBehaviour {
         GameManager.m_gamePaused = true;
 
         GameManager.Instance.m_musicSources[0].clip = GameManager.Instance.m_victorySound;
+        GameManager.Instance.m_musicSources[0].loop = false;
         GameManager.Instance.m_musicSources[0].Play(0);
 
         // insert cool transition animation here
