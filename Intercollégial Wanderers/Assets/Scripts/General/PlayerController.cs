@@ -44,29 +44,35 @@ namespace Player2D
                 return;
             }
 
-            PlayerStats stats = GetComponent<PlayerStats>();
-            
-            // Cache the horizontal input.
-            //float h = Input.GetAxis("Vertical");
+            Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
+
+            Debug.Log(rigidbody.velocity.x);
+
+            float speedBoost = (GameManager.PlayerStats.m_boostTime > 0 ? GameManager.PlayerStats.m_boostSpeedIncrement : 0);
 
             // The Speed animator parameter is set to the absolute value of the horizontal input.
-            //m_anim.SetFloat("VSpeed", Mathf.Abs(h));
             m_anim.SetBool("IsJumping", !m_grounded);
             // If the player is changing direction (h has a different sign to velocity.x) or hasn't reached maxSpeed yet...
-            if (GetComponent<Rigidbody2D>().velocity.x < m_maxSpeed)
+            if (rigidbody.velocity.x < m_maxSpeed + speedBoost)
+            {
                 // ... add a force to the player.
-                GetComponent<Rigidbody2D>().AddForce(Vector2.right * m_moveForce);
+                rigidbody.AddForce(Vector2.right * m_moveForce);
+            }
 
             // If the player's horizontal velocity is greater than the maxSpeed...
-            if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x) > m_maxSpeed + (stats.m_boostTime > 0 ? stats.m_boostTime : 0))
-                // ... set the player's velocity to the maxSpeed in the x axis.
-                GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Sign(
-                    GetComponent<Rigidbody2D>().velocity.x) * (m_maxSpeed + (stats.m_boostTime > 0 ? stats.m_boostTime : 0)), 
-                    GetComponent<Rigidbody2D>().velocity.y);
+            if (Mathf.Abs(rigidbody.velocity.x) > m_maxSpeed + speedBoost)
+            {
+                // Set the player's velocity to the maxSpeed in the X axis.
+                rigidbody.velocity = new Vector2(Mathf.Sign(
+                    rigidbody.velocity.x) * (m_maxSpeed + speedBoost),
+                    rigidbody.velocity.y);
+            }
 
-            if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.y) < -m_maxFallSpeed)
-                // ... set the player's velocity to the maxSpeed in the x axis.
-                GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, Mathf.Sign(GetComponent<Rigidbody2D>().velocity.y) * -m_maxFallSpeed);
+            if (Mathf.Abs(rigidbody.velocity.y) < -m_maxFallSpeed)
+            {
+                // Set the player's velocity to the maxFallSpeed in the Y axis.
+                rigidbody.velocity = new Vector2(rigidbody.velocity.x, Mathf.Sign(rigidbody.velocity.y) * -m_maxFallSpeed);
+            }
 
             if (m_grounded)
             {
@@ -78,7 +84,6 @@ namespace Player2D
             if (GameManager.PlayerStats.m_isJumping)
             {
                 // Set the Jump animator trigger parameter.
-                //anim.SetTrigger("Jump");
 
                 // Play a random jump audio clip.
                 int i = UnityEngine.Random.Range(0, m_jumpClips.Length);
@@ -86,7 +91,7 @@ namespace Player2D
             }
 
             // We hit an object
-            if (GetComponent<Rigidbody2D>().velocity.x == 0 && m_startedMoving && !GameManager.PlayerStats.m_isStopped)
+            if (rigidbody.velocity.x == 0 && m_startedMoving && !GameManager.PlayerStats.m_isStopped)
             {
                 GameManager.PlayerStats.Damage(1);
             }

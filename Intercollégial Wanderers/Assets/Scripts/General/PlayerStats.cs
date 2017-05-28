@@ -42,7 +42,8 @@ public class PlayerStats : MonoBehaviour {
         m_isShooting = false;
         m_isJumping = false;
         m_isFlying = false;
-        m_initBoostTime = PlayerPrefs.GetFloat("initBoostTime", 5f);
+        m_boostSpeedIncrement = PlayerPrefs.GetFloat("boostSpeedIncrement", 10f);
+        m_initBoostTime = PlayerPrefs.GetFloat("initBoostTime", 1.5f);
         m_boostTime = PlayerPrefs.GetFloat("boostTime", 0);
         m_shootDisabled = PlayerPrefs.GetInt("shootDisabled", 0) == 1;
         m_heightDisabled = PlayerPrefs.GetInt("heightDisabled", 0) == 1;
@@ -89,6 +90,7 @@ public class PlayerStats : MonoBehaviour {
         setHeat(0f);
         setFireRate(1f);
         setHeight(1f);
+        setBoostSpeedIncrement(10f);
         setInitBoostTime(5f);
         setBoostTime(0f);
         m_isStopped = false;
@@ -181,6 +183,12 @@ public class PlayerStats : MonoBehaviour {
         if (m_updateSliders) {
             GameManager.UIManager.FindElement("height").GetComponent<Slider>().value = p_height;
         }
+    }
+
+    public void setBoostSpeedIncrement(float p_increment)
+    {
+        m_boostSpeedIncrement = p_increment;
+        PlayerPrefs.SetFloat("boostSpeedIncrement", p_increment);
     }
 
     public void setInitBoostTime(float p_initBoostTime)
