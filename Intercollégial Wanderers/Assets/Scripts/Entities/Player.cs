@@ -53,6 +53,7 @@ public class Player : Entity {
             m_deathTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             GetComponent<Animator>().SetBool("IsDead", true);
             GameManager.Instance.m_musicSources[0].clip = GameManager.Instance.m_gameOverSound;
+            GameManager.Instance.m_musicSources[0].loop = false;
             GameManager.Instance.m_musicSources[0].Play(0);
         }
     }
