@@ -26,6 +26,10 @@ public class Player : Entity {
         if (PauseCheck()) return;
 
         m_canShoot = !GameManager.PlayerStats.m_shootDisabled;
+        if (m_canShoot)
+        {
+            GetComponent<Animator>().SetBool("HasGun", true);
+        }
         m_fireRate = GameManager.PlayerStats.m_fireRate;
 
         if (currentMillis - m_lastShot > m_fireRate * 1000 && GameManager.PlayerStats.m_isShooting) {
