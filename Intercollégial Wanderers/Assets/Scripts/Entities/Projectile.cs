@@ -27,14 +27,15 @@ public class Projectile : Entity {
     void OnCollisionEnter2D(Collision2D p_collision) {
         Collider2D collider = p_collision.collider;
 
-        GameManager.Instance.m_effectSources[0].clip = m_hitSound;
-        GameManager.Instance.m_effectSources[0].Play(0);
+        GetComponent<AudioSource>().clip = m_shootSound;
+        GetComponent<AudioSource>().Play(0);
 
         Die();
     }
 
     // Kills the entity
     protected override void Die() {
+        GameManager.Instance.m_effectSources.Remove(GetComponent<AudioSource>());
         Destroy(gameObject);
     }
 }

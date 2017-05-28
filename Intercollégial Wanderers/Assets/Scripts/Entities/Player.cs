@@ -5,7 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class Player : Entity {
 
-    private long m_deathTime;
+    public AudioClip m_jumpSound; // The player's jump sound
+    private long m_deathTime;     // The player's death time
 
     void Start() {
         m_name = "Player";
@@ -39,7 +40,7 @@ public class Player : Entity {
             m_canDie = false;
             GameManager.m_gamePaused = true;
             m_deathTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-
+            GetComponent<Animator>().SetBool("IsDead", true);
             GameManager.Instance.m_musicSources[0].clip = GameManager.Instance.m_gameOverSound;
             GameManager.Instance.m_musicSources[0].Play(0);
         }
@@ -60,10 +61,15 @@ public class Player : Entity {
             m_lastShot = currentMillis;
 
             GameObject bullet = Instantiate(m_projectile.gameObject, new Vector2(transform.position.x + 1f, transform.position.y + 0.2f), Quaternion.identity) as GameObject;
+
+            bullet.GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("effects");
+            GameManager.Instance.m_effectSources.Add(bullet.GetComponent<AudioSource>());
+
             bullet.GetComponent<Projectile>().Shot();
             bullet.GetComponent<Rigidbody2D>().AddForce(new Vector2(m_projectile.m_speed, 0));
 
-            AudioSource.PlayClipAtPoint(m_shootSound, transform.position);
+            GetComponent<AudioSource>().clip = m_shootSound;
+            GetComponent<AudioSource>().Play(0);
         }
     }
 }
