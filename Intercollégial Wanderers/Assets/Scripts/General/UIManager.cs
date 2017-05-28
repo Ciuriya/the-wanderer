@@ -31,6 +31,29 @@ public class UIManager : MonoBehaviour {
         if (settingsMenu != null) {
             settingsMenu.SetActive(false);
         }
+
+        if (FindElement("cooling") != null) {
+            FindElement("cooling").SetActive(false);
+        }
+
+        if (GameManager.PlayerStats) {
+            if (GameManager.PlayerStats.m_jumpDisabled && FindElement("jump") != null) {
+                FindElement("jump").SetActive(false);
+            }
+
+            if (GameManager.PlayerStats.m_boostDisabled && FindElement("boost") != null) {
+                FindElement("boost").SetActive(false);
+            }
+
+            if (GameManager.PlayerStats.m_shootDisabled && FindElement("shoot") != null) {
+                FindElement("shoot").SetActive(false);
+            }
+
+            if (GameManager.PlayerStats.m_flyDisabled && FindElement("fly") != null) {
+                FindElement("fly").SetActive(false);
+                FindElement("height").SetActive(false);
+            }
+        }
     }
 
     void Update() {

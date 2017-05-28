@@ -57,7 +57,7 @@ public class Player : Entity {
         long currentMillis = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
         // If the entity can fire again, we shoot (fireRate is in seconds)
-        if (m_canShoot && currentMillis - m_lastShot > m_fireRate * 1000) {
+        if (m_canShoot && currentMillis - m_lastShot > m_fireRate * 1000 && !GameManager.PlayerStats.m_shootDisabled) {
             m_lastShot = currentMillis;
 
             GameObject bullet = Instantiate(m_projectile.gameObject, new Vector2(transform.position.x + 1f, transform.position.y + 0.2f), Quaternion.identity) as GameObject;
