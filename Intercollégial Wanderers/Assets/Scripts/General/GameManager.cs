@@ -61,9 +61,6 @@ public class GameManager : MonoBehaviour {
         m_playerStats.setFlyDisabled(m_flyDisabled);
         m_playerStats.setHeightDisabled(m_flyDisabled);
 
-        // This is the main menu, so we want to reset everything for future use
-        if (UIManager.FindElement("menu") != null) {
-            PlayerStats.ResetStats();
-        }
-	}
+        PlayerStats.ResetStats();
+    }
 }

@@ -56,6 +56,7 @@ public class PlayerStats : MonoBehaviour {
 
             Slider heightSlider = GameManager.UIManager.FindElement("height").GetComponent<Slider>();
             heightSlider.value = m_height;
+            heightSlider.maxValue = 3f;
             heightSlider.gameObject.SetActive(!m_heightDisabled);
 
             GameManager.UIManager.FindElement("boost").SetActive(!m_boostDisabled);
@@ -77,7 +78,7 @@ public class PlayerStats : MonoBehaviour {
         {
             m_boostTime -= Time.deltaTime;
         }
-        else
+        else if (!m_boostDisabled)
         {
             GameManager.UIManager.FindElement("boost").SetActive(true);
         }

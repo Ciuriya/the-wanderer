@@ -8,7 +8,7 @@ namespace Player2D
 {
     public class PlayerController : MonoBehaviour
     {
-        private bool m_startedMoving;             // If the player started moving
+        private long lastMovementTime = 0;        // Last time the player moved
 
         [HideInInspector]
         public bool m_facingRight = true;         // For determining which way the player is currently facing.
@@ -41,6 +41,7 @@ namespace Player2D
         {
             if (GameManager.m_gamePaused)
             {
+                lastMovementTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
                 return;
             }
 
@@ -78,24 +79,16 @@ namespace Player2D
                 GameManager.UIManager.FindElement("jump").SetActive(true);
             }
 
-            // If the player should jump...
-            if (GameManager.PlayerStats.m_isJumping)
-            {
-                // Set the Jump animator trigger parameter.
-
-                // Play a random jump audio clip.
-                int i = UnityEngine.Random.Range(0, m_jumpClips.Length);
-                AudioSource.PlayClipAtPoint(m_jumpClips[i], transform.position);
+            if (rigidbody.velocity.x > 0) {
+                lastMovementTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             }
+
+            long currentMillis = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
             // We hit an object
-            if (rigidbody.velocity.x == 0 && m_startedMoving)
+            if (currentMillis - lastMovementTime >= 50)
             {
                 GameManager.PlayerStats.Damage(1);
-            }
-            else if (!m_startedMoving)
-            {
-                m_startedMoving = true;
             }
         }
 

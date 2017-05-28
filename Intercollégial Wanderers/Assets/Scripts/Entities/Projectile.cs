@@ -28,6 +28,7 @@ public class Projectile : Entity {
         Collider2D collider = p_collision.collider;
 
         GetComponent<AudioSource>().clip = m_shootSound;
+        GetComponent<AudioSource>().enabled = true;
         GetComponent<AudioSource>().Play(0);
 
         Die();
