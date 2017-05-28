@@ -4,6 +4,7 @@ using System;
 
 public class Drone : Entity {
     Animator m_anim;
+
     void Start() {
         m_autoFire = true;
         m_canDie = true;
@@ -15,6 +16,6 @@ public class Drone : Entity {
 
     protected override void Die() {
         m_anim.SetBool("IsDead", true);
-        Destroy(gameObject);
+        Destroy(gameObject, 0.5f);
     }
 }
