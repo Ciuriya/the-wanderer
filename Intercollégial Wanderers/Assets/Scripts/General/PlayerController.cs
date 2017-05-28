@@ -77,7 +77,7 @@ namespace Player2D
             }
 
             // We hit an object
-            if (GetComponent<Rigidbody2D>().velocity.x == 0 && m_startedMoving && !GameManager.PlayerStats.m_isStopped) {
+            if (GetComponent<Rigidbody2D>().velocity.x == 0 && m_startedMoving) {
                 GameManager.PlayerStats.Damage(1);
             } else if (!m_startedMoving) {
                 m_startedMoving = true;
