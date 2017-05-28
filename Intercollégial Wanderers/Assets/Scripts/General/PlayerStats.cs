@@ -71,9 +71,14 @@ public class PlayerStats : MonoBehaviour {
         {
             m_hitCooldown -= Time.deltaTime;
         }
+        // Update the boost timer
         if (m_boostTime > 0)
         {
             m_boostTime -= Time.deltaTime;
+        }
+        else
+        {
+            FindElement("boost").SetActive(true);
         }
     }
 
@@ -88,7 +93,6 @@ public class PlayerStats : MonoBehaviour {
         setBoostSpeedIncrement(10f);
         setInitBoostTime(5f);
         setBoostTime(0f);
-        m_isStopped = false;
         m_isShooting = false;
         m_isJumping = false;
         m_isFlying = false;

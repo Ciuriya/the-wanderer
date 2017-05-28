@@ -46,8 +46,6 @@ namespace Player2D
 
             Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
 
-            Debug.Log(rigidbody.velocity.x);
-
             float speedBoost = (GameManager.PlayerStats.m_boostTime > 0 ? GameManager.PlayerStats.m_boostSpeedIncrement : 0);
 
             // The Speed animator parameter is set to the absolute value of the horizontal input.
@@ -91,7 +89,7 @@ namespace Player2D
             }
 
             // We hit an object
-            if (rigidbody.velocity.x == 0 && m_startedMoving && !GameManager.PlayerStats.m_isStopped)
+            if (rigidbody.velocity.x == 0 && m_startedMoving)
             {
                 GameManager.PlayerStats.Damage(1);
             }
