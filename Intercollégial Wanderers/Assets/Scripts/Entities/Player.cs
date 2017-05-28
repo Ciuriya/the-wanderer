@@ -6,8 +6,9 @@ using UnityEngine.UI;
 
 public class Player : Entity {
 
-    public AudioClip m_jumpSound; // The player's jump sound
-    private long m_deathTime;     // The player's death time
+    public AudioClip m_jumpSound;    // The player's jump sound
+    public AudioClip m_coolingSound; // The sound of overheating
+    private long m_deathTime;        // The player's death time
 
     void Start() {
         m_name = "Player";
