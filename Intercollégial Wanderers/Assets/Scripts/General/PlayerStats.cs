@@ -17,7 +17,9 @@ public class PlayerStats : MonoBehaviour {
     public bool m_isShooting;           // If the player is currently shooting
     public bool m_isJumping;            // If the player is currently jumping
     public bool m_isFlying;             // If the player is currently flying
-    public bool m_isBoosting;           // If the player is currently boosting
+    public float m_boostSpeedIncrement; // The player's speed increment after a boost
+    public float m_initBoostTime;       // The player's maximum time with a boost
+    public float m_boostTime;           // The player's time left with a boost
     public bool m_boostDisabled;        // If the player's boosting is disabled
     public bool m_shootDisabled;        // If the player's shooting is disabled
     public bool m_heightDisabled;       // If the player's height meter is disabled
@@ -37,9 +39,11 @@ public class PlayerStats : MonoBehaviour {
         m_isShooting = false;
         m_isJumping = false;
         m_isFlying = false;
-        m_isBoosting = false;
-        m_boostDisabled = PlayerPrefs.GetInt("boostDisabled", 0) == 1;
+        m_boostSpeedIncrement = PlayerPrefs.GetFloat("boostSpeedIncrement", 10f);
+        m_initBoostTime = PlayerPrefs.GetFloat("initBoostTime", 1.5f);
+        m_boostTime = PlayerPrefs.GetFloat("boostTime", 0);
         m_shootDisabled = PlayerPrefs.GetInt("shootDisabled", 0) == 1;
+        m_boostDisabled = PlayerPrefs.GetInt("boostDisabled", 0) == 1;
         m_heightDisabled = PlayerPrefs.GetInt("heightDisabled", 0) == 1;
         m_flyDisabled = PlayerPrefs.GetInt("flyDisabled", 0) == 1;
         m_jumpDisabled = PlayerPrefs.GetInt("jumpDisabled", 0) == 1;
@@ -68,6 +72,15 @@ public class PlayerStats : MonoBehaviour {
         {
             m_hitCooldown -= Time.deltaTime;
         }
+        // Update the boost timer
+        if (m_boostTime > 0)
+        {
+            m_boostTime -= Time.deltaTime;
+        }
+        else
+        {
+            GameManager.UIManager.FindElement("boost").SetActive(true);
+        }
     }
 
     public void ResetStats() {
@@ -78,12 +91,14 @@ public class PlayerStats : MonoBehaviour {
         setHeat(0f);
         setFireRate(1f);
         setHeight(1f);
+        setBoostSpeedIncrement(10f);
+        setInitBoostTime(5f);
+        setBoostTime(0f);
         m_isShooting = false;
         m_isJumping = false;
         m_isFlying = false;
-        m_isBoosting = false;
-        setBoostDisabled(false);
         setHeightDisabled(false);
+        setBoostDisabled(false);
         setShootDisabled(false);
         setFlyDisabled(false);
         setJumpDisabled(false);
@@ -170,11 +185,42 @@ public class PlayerStats : MonoBehaviour {
         }
     }
 
+    public void setBoostSpeedIncrement(float p_increment)
+    {
+        m_boostSpeedIncrement = p_increment;
+        PlayerPrefs.SetFloat("boostSpeedIncrement", p_increment);
+    }
+
+    public void setInitBoostTime(float p_initBoostTime)
+    {
+        m_initBoostTime = p_initBoostTime;
+        PlayerPrefs.SetFloat("initBoostTime", p_initBoostTime);
+    }
+
+    public void setBoostTime(float p_boostTime) {
+        m_boostTime = p_boostTime;
+        PlayerPrefs.SetFloat("boostTime", p_boostTime);
+
+        if (m_updateSliders) {
+            GameManager.UIManager.FindElement("boost").SetActive(m_initBoostTime > 0);
+        }
+    }
+
+    public void fillBoostTime()
+    {
+        if (!m_boostDisabled)
+        {
+            m_boostTime = m_initBoostTime;
+            m_boostDisabled = true;
+        }
+    }
+
     public void setBoostDisabled(bool p_disabled) {
         m_boostDisabled = p_disabled;
         PlayerPrefs.SetInt("boostDisabled", p_disabled ? 1 : 0);
 
-        if (m_updateSliders) {
+        if (m_updateSliders)
+        {
             GameManager.UIManager.FindElement("boost").SetActive(!p_disabled);
         }
     }

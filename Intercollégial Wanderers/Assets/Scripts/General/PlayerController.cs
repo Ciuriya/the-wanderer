@@ -6,9 +6,8 @@ using System.Collections;
 
 namespace Player2D
 {
-    [RequireComponent(typeof(PlayerStats))]
     public class PlayerController : MonoBehaviour
-    { 
+    {
         private bool m_startedMoving;             // If the player started moving
 
         [HideInInspector]
@@ -24,52 +23,65 @@ namespace Player2D
         private bool m_grounded = false;          // Whether or not the player is grounded.
         private Animator m_anim;                  // Reference to the player's animator component.
 
-        void Awake() {
+        void Awake()
+        {
             // Setting up references.
             m_groundCheck = transform.Find("groundChecker");
             m_anim = GetComponent<Animator>();
         }
 
 
-        void Update() {
+        void Update()
+        {
             // The player is grounded if a linecast to the groundcheck position hits anything on the ground layer.
             m_grounded = Physics2D.Linecast(transform.position, m_groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
         }
 
-        void FixedUpdate() {
-            if (GameManager.m_gamePaused) {
+        void FixedUpdate()
+        {
+            if (GameManager.m_gamePaused)
+            {
                 return;
             }
 
-            // Cache the horizontal input.
-            //float h = Input.GetAxis("Vertical");
+            Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
+
+            float speedBoost = (GameManager.PlayerStats.m_boostTime > 0 ? GameManager.PlayerStats.m_boostSpeedIncrement : 0);
 
             // The Speed animator parameter is set to the absolute value of the horizontal input.
-            //m_anim.SetFloat("VSpeed", Mathf.Abs(h));
             m_anim.SetBool("IsJumping", !m_grounded);
             // If the player is changing direction (h has a different sign to velocity.x) or hasn't reached maxSpeed yet...
-            if (GetComponent<Rigidbody2D>().velocity.x < m_maxSpeed)
+            if (rigidbody.velocity.x < m_maxSpeed + speedBoost)
+            {
                 // ... add a force to the player.
-                GetComponent<Rigidbody2D>().AddForce(Vector2.right * m_moveForce);
+                rigidbody.AddForce(Vector2.right * m_moveForce);
+            }
 
             // If the player's horizontal velocity is greater than the maxSpeed...
-            if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x) > m_maxSpeed)
-                // ... set the player's velocity to the maxSpeed in the x axis.
-                GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Sign(GetComponent<Rigidbody2D>().velocity.x) * m_maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
+            if (Mathf.Abs(rigidbody.velocity.x) > m_maxSpeed + speedBoost)
+            {
+                // Set the player's velocity to the maxSpeed in the X axis.
+                rigidbody.velocity = new Vector2(Mathf.Sign(
+                    rigidbody.velocity.x) * (m_maxSpeed + speedBoost),
+                    rigidbody.velocity.y);
+            }
 
-            if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.y) < -m_maxFallSpeed)
-                // ... set the player's velocity to the maxSpeed in the x axis.
-                GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, Mathf.Sign(GetComponent<Rigidbody2D>().velocity.y) * -m_maxFallSpeed);
+            if (Mathf.Abs(rigidbody.velocity.y) < -m_maxFallSpeed)
+            {
+                // Set the player's velocity to the maxFallSpeed in the Y axis.
+                rigidbody.velocity = new Vector2(rigidbody.velocity.x, Mathf.Sign(rigidbody.velocity.y) * -m_maxFallSpeed);
+            }
 
-            if (m_grounded) {
+            if (m_grounded)
+            {
                 GameManager.PlayerStats.m_isJumping = false;
                 GameManager.UIManager.FindElement("jump").SetActive(true);
             }
 
             // If the player should jump...
-            if (GameManager.PlayerStats.m_isJumping) {
+            if (GameManager.PlayerStats.m_isJumping)
+            {
                 // Set the Jump animator trigger parameter.
-                //anim.SetTrigger("Jump");
 
                 // Play a random jump audio clip.
                 int i = UnityEngine.Random.Range(0, m_jumpClips.Length);
@@ -77,14 +89,18 @@ namespace Player2D
             }
 
             // We hit an object
-            if (GetComponent<Rigidbody2D>().velocity.x == 0 && m_startedMoving) {
+            if (rigidbody.velocity.x == 0 && m_startedMoving)
+            {
                 GameManager.PlayerStats.Damage(1);
-            } else if (!m_startedMoving) {
+            }
+            else if (!m_startedMoving)
+            {
                 m_startedMoving = true;
             }
         }
 
-        void Flip() {
+        void Flip()
+        {
             // Switch the way the player is labelled as facing.
             m_facingRight = !m_facingRight;
 
@@ -94,7 +110,8 @@ namespace Player2D
             transform.localScale = theScale;
         }
 
-        public bool IsGrounded() {
+        public bool IsGrounded()
+        {
             return m_grounded;
         }
     }

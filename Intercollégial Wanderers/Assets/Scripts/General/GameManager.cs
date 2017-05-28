@@ -36,13 +36,17 @@ public class GameManager : MonoBehaviour {
             return m_uiManager;
         }
     }
-
+    
     public static bool m_gamePaused;          // If game is currently paused
     public AudioClip m_gameOverSound;         // Sound played when the game is over
     public AudioClip m_victorySound;          // Sound played when the game is won
     public int m_gameOverLength;              // Length of the game over fail time, to replace with a real menu if possible
     public List<AudioSource> m_musicSources;  // All musical audio sources currently used in the game
     public List<AudioSource> m_effectSources; // All effect audio sources currently used in the game
+    public bool m_jumpDisabled;               // If jump is disabled for this stage
+    public bool m_boostDisabled;              // If boost is disabled for this stage
+    public bool m_shootDisabled;              // If shooting is disabled for this stage
+    public bool m_flyDisabled;                // If flying is disabled for this stage
 
     void Start() {
         m_gamePaused = false;
@@ -50,6 +54,12 @@ public class GameManager : MonoBehaviour {
         m_playerStats = gameObject.AddComponent<PlayerStats>();
         m_inputController = gameObject.AddComponent<InputController>();
         m_uiManager = GameObject.FindWithTag("UI_Manager").GetComponent<UIManager>();
+
+        m_playerStats.setJumpDisabled(m_jumpDisabled);
+        m_playerStats.setBoostDisabled(m_boostDisabled);
+        m_playerStats.setShootDisabled(m_shootDisabled);
+        m_playerStats.setFlyDisabled(m_flyDisabled);
+        m_playerStats.setHeightDisabled(m_flyDisabled);
 
         // This is the main menu, so we want to reset everything for future use
         if (UIManager.FindElement("menu") != null) {
