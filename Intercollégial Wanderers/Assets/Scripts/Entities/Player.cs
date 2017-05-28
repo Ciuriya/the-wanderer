@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Player : Entity {
 
@@ -34,7 +35,7 @@ public class Player : Entity {
 
         if (currentMillis - m_lastShot > m_fireRate * 1000 && GameManager.PlayerStats.m_isShooting) {
             GameManager.PlayerStats.m_isShooting = false;
-            GameManager.UIManager.FindElement("shoot").SetActive(true);
+            GameManager.UIManager.FindElement("shoot").GetComponent<Button>().interactable = true;
         }
 
         if (GameManager.PlayerStats.m_heat >= GameManager.PlayerStats.m_maxHeat) {

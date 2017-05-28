@@ -114,7 +114,7 @@ public class InputController : MonoBehaviour {
 
             m_player.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, m_controller.m_jumpForce));
 
-            GameManager.UIManager.FindElement("jump").SetActive(false);
+            GameManager.UIManager.FindElement("jump").GetComponent<Button>().interactable = false;
         }
     }
 
@@ -123,12 +123,16 @@ public class InputController : MonoBehaviour {
             m_timeBeforeFlyHeat = 350;
             m_flyHeatIncreased = false;
             GameManager.PlayerStats.m_isFlying = true;
-            GameManager.UIManager.HeightSlider(m_player.transform.position.y + 2f);
+            GameManager.UIManager.FindElement("height").GetComponent<Slider>().interactable = true;
+
+            GameManager.UIManager.HeightSlider(m_player.transform.position.y + 1f);
+
             m_player.GetComponent<Rigidbody2D>().gravityScale = 0;
             GameManager.PlayerStats.increaseHeat();
         } else if (GameManager.PlayerStats.m_isFlying && !GameManager.PlayerStats.m_flyDisabled) {
             m_player.GetComponent<Rigidbody2D>().gravityScale = 1;
             GameManager.PlayerStats.m_isFlying = false;
+            GameManager.UIManager.FindElement("height").GetComponent<Slider>().interactable = false;
         }
     }
 
