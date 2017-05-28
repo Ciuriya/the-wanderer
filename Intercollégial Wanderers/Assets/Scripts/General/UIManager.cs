@@ -61,6 +61,9 @@ public class UIManager : MonoBehaviour {
         }
 
         settingsMenu.SetActive(true);
+
+        GameManager.Instance.m_effectSources[0].clip = m_menuOpen;
+        GameManager.Instance.m_effectSources[0].Play(0);
     }
 
     // Toggles the pause menu on or off
@@ -73,9 +76,6 @@ public class UIManager : MonoBehaviour {
 
         if (mainMenu != null) {
             if (!mainMenu.activeSelf) {
-                GameManager.Instance.m_effectSources[0].clip = m_menuOpen;
-                GameManager.Instance.m_effectSources[0].Play(0);
-            } else {
                 GameManager.Instance.m_effectSources[0].clip = m_menuClose;
                 GameManager.Instance.m_effectSources[0].Play(0);
             }
