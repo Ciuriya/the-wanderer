@@ -26,6 +26,7 @@ public class PlayerStats : MonoBehaviour {
     public bool m_flyDisabled;          // If the player's flying is disabled
     public bool m_jumpDisabled;         // If the player's jumping is disabled
     public bool m_updateSliders;        // Used by sliders to know whether or not sliders need to be updated
+    private bool m_heatWarned;          // If the player was warned of overheating
 
     void Start() {
         // values are saved in PlayerPrefs to allow for easy transfer between levels
@@ -67,8 +68,7 @@ public class PlayerStats : MonoBehaviour {
         }
     }
 
-    private void Update()
-    {
+    private void Update() {
         // Update the hit cooldown
         if (m_hitCooldown > 0f)
         {
@@ -172,6 +172,14 @@ public class PlayerStats : MonoBehaviour {
             m_heat = m_maxHeat;
         }
 
+        if (m_maxHeat - m_heat <= 0.4f && !m_heatWarned) {
+            Player player = GameManager.InputController.GetPlayer();
+            AudioSource playerAudio = player.GetComponent<AudioSource>();
+            playerAudio.clip = player.m_coolingSound;
+            playerAudio.Play();
+            m_heatWarned = true;
+        }
+
         if (m_updateSliders) {
             GameManager.UIManager.FindElement("cooling").GetComponent<Slider>().value = m_heat;
         }
@@ -182,6 +190,10 @@ public class PlayerStats : MonoBehaviour {
 
         if (m_heat < 0) {
             m_heat = 0;
+        }
+
+        if (m_maxHeat - m_heat > 0.4f) {
+            m_heatWarned = false;
         }
 
         if (m_updateSliders) {
