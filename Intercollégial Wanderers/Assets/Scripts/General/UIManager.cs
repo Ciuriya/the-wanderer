@@ -113,23 +113,27 @@ public class UIManager : MonoBehaviour {
             GameManager.Instance.m_effectSources[0].clip = m_menuClose;
             GameManager.Instance.m_effectSources[0].Play(0);
         } else {
-            if (!pauseMenu.activeSelf) {
-                GameManager.Instance.m_effectSources[0].clip = m_menuOpen;
-                Time.timeScale = 0.0f;
-                FindElement("height").GetComponent<Slider>().interactable = false;
-            } else {
-                GameManager.Instance.m_effectSources[0].clip = m_menuClose;
-                Time.timeScale = 1.0f;
-                GameManager.m_timeSinceUnpause = 0;
-                FindElement("height").GetComponent<Slider>().interactable = GameManager.PlayerStats.m_isFlying;
+            if (GameManager.Instance.m_allowPausing) {
+                if (!pauseMenu.activeSelf) {
+                    GameManager.Instance.m_effectSources[0].clip = m_menuOpen;
+                    Time.timeScale = 0.0f;
+                    FindElement("height").GetComponent<Slider>().interactable = false;
+                } else {
+                    GameManager.Instance.m_effectSources[0].clip = m_menuClose;
+                    Time.timeScale = 1.0f;
+                    GameManager.m_timeSinceUnpause = 0;
+                    FindElement("height").GetComponent<Slider>().interactable = GameManager.PlayerStats.m_isFlying;
+                }
+
+                GameManager.Instance.m_effectSources[0].Play(0);
+
+                pauseMenu.SetActive(!pauseMenu.activeSelf);
             }
-
-            GameManager.Instance.m_effectSources[0].Play(0);
-
-            pauseMenu.SetActive(!pauseMenu.activeSelf);
         }
 
-        GameManager.m_gamePaused = pauseMenu.activeSelf || settingsMenu.activeSelf;
+        if (GameManager.Instance.m_allowPausing) {
+            GameManager.m_gamePaused = pauseMenu.activeSelf || settingsMenu.activeSelf;
+        }
     }
 
     // Loads the main menu from the pause menu

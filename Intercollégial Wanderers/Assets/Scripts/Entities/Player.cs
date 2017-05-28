@@ -49,6 +49,7 @@ public class Player : Entity {
         if (m_canDie) {
             m_canDie = false;
             GameManager.PlayerStats.setMaxHeat(0f);
+            GameManager.Instance.m_allowPausing = false;
             GameManager.m_gamePaused = true;
             m_deathTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             GetComponent<Animator>().SetBool("IsDead", true);

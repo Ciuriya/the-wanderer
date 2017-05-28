@@ -48,9 +48,11 @@ public class GameManager : MonoBehaviour {
     public bool m_boostDisabled;              // If boost is disabled for this stage
     public bool m_shootDisabled;              // If shooting is disabled for this stage
     public bool m_flyDisabled;                // If flying is disabled for this stage
+    public bool m_allowPausing;
 
     void Start() {
         m_gamePaused = false;
+        m_allowPausing = true;
         m_manager = gameObject.GetComponent<GameManager>();
         m_playerStats = gameObject.AddComponent<PlayerStats>();
         m_inputController = gameObject.AddComponent<InputController>();
