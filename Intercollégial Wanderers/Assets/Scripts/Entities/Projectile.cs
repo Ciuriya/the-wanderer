@@ -6,7 +6,6 @@ public class Projectile : Entity {
     public float m_speed;         // The speed at which the projectile travels
     public AudioClip m_hitSound;  // The sound played on projectile hit
     private Vector3 m_start;      // The shot position
-    private Vector2 m_savedSpeed; // If the game is paused, the projectile needs to save its velocity
 
     void Start() {
         m_name = "projectile";
