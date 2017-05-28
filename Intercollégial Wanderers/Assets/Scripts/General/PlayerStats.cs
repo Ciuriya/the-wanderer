@@ -14,7 +14,6 @@ public class PlayerStats : MonoBehaviour {
     private float m_hitCooldown;        // The player's current cooldown time (in seconds)
     public float m_fireRate;            // The player's current firing rate/sec
     private float m_height;             // The player's current flying height
-    public bool m_isStopped;            // If the player is currently stopped
     public bool m_isShooting;           // If the player is currently shooting
     public bool m_isJumping;            // If the player is currently jumping
     public bool m_isFlying;             // If the player is currently flying
@@ -23,7 +22,6 @@ public class PlayerStats : MonoBehaviour {
     public bool m_shootDisabled;        // If the player's shooting is disabled
     public bool m_heightDisabled;       // If the player's height meter is disabled
     public bool m_flyDisabled;          // If the player's flying is disabled
-    public bool m_stopDisabled;         // If the player's stopping is disabled
     public bool m_jumpDisabled;         // If the player's jumping is disabled
     public bool m_updateSliders;        // Used by sliders to know whether or not sliders need to be updated
 
@@ -36,7 +34,6 @@ public class PlayerStats : MonoBehaviour {
         m_heat = PlayerPrefs.GetFloat("heat", 0f);
         m_fireRate = PlayerPrefs.GetFloat("fireRate", 1f);
         m_height = PlayerPrefs.GetFloat("height", 1f);
-        m_isStopped = false;
         m_isShooting = false;
         m_isJumping = false;
         m_isFlying = false;
@@ -45,7 +42,6 @@ public class PlayerStats : MonoBehaviour {
         m_shootDisabled = PlayerPrefs.GetInt("shootDisabled", 0) == 1;
         m_heightDisabled = PlayerPrefs.GetInt("heightDisabled", 0) == 1;
         m_flyDisabled = PlayerPrefs.GetInt("flyDisabled", 0) == 1;
-        m_stopDisabled = PlayerPrefs.GetInt("stopDisabled", 0) == 1;
         m_jumpDisabled = PlayerPrefs.GetInt("jumpDisabled", 0) == 1;
         m_updateSliders = true;
 
@@ -61,7 +57,6 @@ public class PlayerStats : MonoBehaviour {
             GameManager.UIManager.FindElement("boost").SetActive(!m_boostDisabled);
             GameManager.UIManager.FindElement("shoot").SetActive(!m_shootDisabled);
             GameManager.UIManager.FindElement("fly").SetActive(!m_flyDisabled);
-            GameManager.UIManager.FindElement("stop").SetActive(!m_stopDisabled);
             GameManager.UIManager.FindElement("jump").SetActive(!m_jumpDisabled);
         }
     }
@@ -83,7 +78,6 @@ public class PlayerStats : MonoBehaviour {
         setHeat(0f);
         setFireRate(1f);
         setHeight(1f);
-        m_isStopped = false;
         m_isShooting = false;
         m_isJumping = false;
         m_isFlying = false;
@@ -92,7 +86,6 @@ public class PlayerStats : MonoBehaviour {
         setHeightDisabled(false);
         setShootDisabled(false);
         setFlyDisabled(false);
-        setStopDisabled(false);
         setJumpDisabled(false);
     }
 
@@ -210,15 +203,6 @@ public class PlayerStats : MonoBehaviour {
 
         if (m_updateSliders) {
             GameManager.UIManager.FindElement("fly").SetActive(!p_disabled);
-        }
-    }
-
-    public void setStopDisabled(bool p_disabled) {
-        m_stopDisabled = p_disabled;
-        PlayerPrefs.SetInt("stopDisabled", p_disabled ? 1 : 0);
-
-        if (m_updateSliders) {
-            GameManager.UIManager.FindElement("stop").SetActive(!p_disabled);
         }
     }
 
