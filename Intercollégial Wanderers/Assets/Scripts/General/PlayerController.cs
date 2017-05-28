@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.UI;
 
 namespace Player2D
 {
@@ -76,7 +77,7 @@ namespace Player2D
             if (m_grounded)
             {
                 GameManager.PlayerStats.m_isJumping = false;
-                GameManager.UIManager.FindElement("jump").SetActive(true);
+                GameManager.UIManager.FindElement("jump").GetComponent<Button>().interactable = true;
             }
 
             if (rigidbody.velocity.x > 0) {

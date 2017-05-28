@@ -32,10 +32,6 @@ public class UIManager : MonoBehaviour {
             settingsMenu.SetActive(false);
         }
 
-        if (FindElement("cooling") != null) {
-            FindElement("cooling").SetActive(false);
-        }
-
         if (GameManager.PlayerStats) {
             if (GameManager.PlayerStats.m_jumpDisabled && FindElement("jump") != null) {
                 FindElement("jump").SetActive(false);
@@ -51,8 +47,9 @@ public class UIManager : MonoBehaviour {
 
             if (GameManager.PlayerStats.m_flyDisabled && FindElement("fly") != null) {
                 FindElement("fly").SetActive(false);
-                FindElement("height").SetActive(false);
             }
+
+            FindElement("height").GetComponent<Slider>().interactable = false;
         }
     }
 
@@ -164,15 +161,16 @@ public class UIManager : MonoBehaviour {
 
     // The method used by the height slider to increment/decrement the speed value
     public void HeightSlider(float p_value) {
-        GameManager.PlayerStats.setHeight(p_value);
+        if (GameManager.PlayerStats.m_isFlying) {
+            GameManager.PlayerStats.setHeight(p_value);
+        }
     }
 
     // The method used by the boost button to boost
     public void Boost() {
-        FindElement("boost").SetActive(false);
+        FindElement("boost").GetComponent<Button>().interactable = false;
         GameManager.PlayerStats.fillBoostTime();
         GameManager.PlayerStats.increaseHeat();
-        // make sure to re-enable button later
     }
 
     // The method used by the jump button to jump
@@ -182,7 +180,7 @@ public class UIManager : MonoBehaviour {
 
     // The method used by the shoot button to shoot
     public void Shoot() {
-        FindElement("shoot").SetActive(false);
+        FindElement("shoot").GetComponent<Button>().interactable = false;
         GameManager.PlayerStats.m_isShooting = true;
         GameManager.InputController.GetPlayer().Shoot();
     }

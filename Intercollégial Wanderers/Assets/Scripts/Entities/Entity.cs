@@ -91,7 +91,7 @@ public abstract class Entity : MonoBehaviour {
         if (m_canShoot && currentMillis - m_lastShot > m_fireRate * 1000) {
             m_lastShot = currentMillis;
 
-            GameObject bullet = Instantiate(m_projectile.gameObject, new Vector2(transform.position.x - 1f, transform.position.y + 0.2f), Quaternion.identity) as GameObject;
+            GameObject bullet = Instantiate(m_projectile.gameObject, new Vector2(transform.position.x, transform.position.y + 0.2f), Quaternion.identity) as GameObject;
 
             bullet.GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("effects");
             GameManager.Instance.m_effectSources.Add(bullet.GetComponent<AudioSource>());

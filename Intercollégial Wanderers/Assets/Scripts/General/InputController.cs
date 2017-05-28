@@ -6,14 +6,20 @@ using UnityEngine.UI;
 
 public class InputController : MonoBehaviour {
 
-    private Player m_player;               // The player
-    private PlayerController m_controller; // The controller
+    private Player m_player;                // The player
+    private PlayerController m_controller;  // The controller
+    private Vector2 m_lastFlyForce;         // The last fly force applied
+    private bool m_flyHeatIncreased;        // If the fly heating kicked in at least once
+    private float m_timeBeforeFlyHeat;      // Length of time before the next heat increase
+    private float m_timeBeforeHeatDecrease; // Length of time before the next heat decrease
 
     void Start() {
         if (GameManager.UIManager && GameManager.UIManager.FindElement("menu") == null) {
             m_player = GameObject.FindWithTag("Player").GetComponent<Player>();
             m_controller = m_player.gameObject.GetComponent<PlayerController>();
         }
+
+        m_timeBeforeHeatDecrease = 0;
     }
 
     void Update() {
@@ -33,31 +39,28 @@ public class InputController : MonoBehaviour {
             Fly();
         }
 
-        if (GameManager.UIManager.FindElement("menu") == null) {
+        if (GameManager.UIManager.FindElement("menu") == null && !GameManager.PlayerStats.m_flyDisabled && GameManager.PlayerStats.m_isFlying) {
             Slider heightSlider = GameManager.UIManager.FindElement("height").GetComponent<Slider>();
 
-            if (Input.GetKeyDown(KeyCode.W) && !GameManager.PlayerStats.m_flyDisabled) {
-                float desired = heightSlider.value + 0.25f;
+            float desiredHeight = heightSlider.value;
 
-                if (desired > heightSlider.maxValue)
-                {
-                    desired = heightSlider.maxValue;
+            if (Input.GetKeyDown(KeyCode.W)) {
+                desiredHeight += 0.25f;
+
+                if (desiredHeight > heightSlider.maxValue) {
+                    desiredHeight = heightSlider.maxValue;
                 }
-
-                GameManager.UIManager.HeightSlider(desired);
             }
 
-            if (Input.GetKeyDown(KeyCode.S) && !GameManager.PlayerStats.m_flyDisabled) {
-                float desired = heightSlider.value - 0.25f;
+            if (Input.GetKeyDown(KeyCode.S)) {
+                desiredHeight -= 0.25f;
 
-                if (desired < heightSlider.minValue)
-                {
-                    desired = heightSlider.minValue;
+                if (desiredHeight < heightSlider.minValue) {
+                    desiredHeight = heightSlider.minValue;
                 }
-
-                GameManager.UIManager.HeightSlider(desired);
             }
 
+            GameManager.UIManager.HeightSlider(desiredHeight);
         }
 
         long currentMillis = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
@@ -68,11 +71,35 @@ public class InputController : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        if (GameManager.PlayerStats.m_isFlying) {
+        if (!GameManager.PlayerStats.m_isFlying && !GameManager.PlayerStats.m_isShooting && GameManager.PlayerStats.m_boostTime <= 0) {
+            m_timeBeforeHeatDecrease -= Time.deltaTime * 1000;
+
+            if (m_timeBeforeHeatDecrease <= 0) {
+                GameManager.PlayerStats.decreaseHeat();
+                m_timeBeforeHeatDecrease = 1000;
+            }
+        }
+
+        if (GameManager.PlayerStats.m_isFlying && !GameManager.m_gamePaused) {
+            if (!m_controller.IsGrounded()) {
+                m_timeBeforeFlyHeat -= Time.deltaTime * 1000;
+
+                if (m_timeBeforeFlyHeat <= 0) {
+                    GameManager.PlayerStats.increaseHeat();
+                    m_timeBeforeFlyHeat = 350;
+                    m_flyHeatIncreased = true;
+                }
+            } else if (m_flyHeatIncreased || m_timeBeforeFlyHeat < 175) {
+                Fly();
+                return;
+            }
+
+
             float height = GameManager.PlayerStats.getHeight();
             float curHeight = m_player.transform.position.y;
             float diff = curHeight - height;
 
+            m_lastFlyForce = new Vector2(0, m_lastFlyForce.y - diff);
             m_player.GetComponent<Rigidbody2D>().AddForceAtPosition(new Vector2(0, -diff), new Vector2(m_player.transform.position.x, height), ForceMode2D.Force);
         }
     }
@@ -87,21 +114,25 @@ public class InputController : MonoBehaviour {
 
             m_player.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, m_controller.m_jumpForce));
 
-            GameManager.UIManager.FindElement("jump").SetActive(false);
+            GameManager.UIManager.FindElement("jump").GetComponent<Button>().interactable = false;
         }
     }
 
     public void Fly() {
         if (!GameManager.PlayerStats.m_isFlying && !GameManager.PlayerStats.m_flyDisabled) {
+            m_timeBeforeFlyHeat = 350;
+            m_flyHeatIncreased = false;
             GameManager.PlayerStats.m_isFlying = true;
-            GameManager.UIManager.HeightSlider(m_player.transform.position.y + 2f);
+            GameManager.UIManager.FindElement("height").GetComponent<Slider>().interactable = true;
+
+            GameManager.UIManager.HeightSlider(m_player.transform.position.y + 1f);
+
             m_player.GetComponent<Rigidbody2D>().gravityScale = 0;
             GameManager.PlayerStats.increaseHeat();
-        }
-        else if (GameManager.PlayerStats.m_isFlying && !GameManager.PlayerStats.m_flyDisabled)
-        {
+        } else if (GameManager.PlayerStats.m_isFlying && !GameManager.PlayerStats.m_flyDisabled) {
             m_player.GetComponent<Rigidbody2D>().gravityScale = 1;
             GameManager.PlayerStats.m_isFlying = false;
+            GameManager.UIManager.FindElement("height").GetComponent<Slider>().interactable = false;
         }
     }
 

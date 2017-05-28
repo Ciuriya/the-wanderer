@@ -40,7 +40,7 @@ public class PlayerStats : MonoBehaviour {
         m_isJumping = false;
         m_isFlying = false;
         m_boostSpeedIncrement = PlayerPrefs.GetFloat("boostSpeedIncrement", 5f);
-        m_initBoostTime = PlayerPrefs.GetFloat("initBoostTime", 1.5f);
+        m_initBoostTime = PlayerPrefs.GetFloat("initBoostTime", 1f);
         m_boostTime = PlayerPrefs.GetFloat("boostTime", 0);
         m_shootDisabled = PlayerPrefs.GetInt("shootDisabled", 0) == 1;
         m_boostDisabled = PlayerPrefs.GetInt("boostDisabled", 0) == 1;
@@ -78,7 +78,7 @@ public class PlayerStats : MonoBehaviour {
         if (m_boostTime > 0 && !GameManager.m_gamePaused) {
             m_boostTime -= Time.deltaTime;
         } else if (!m_boostDisabled && !GameManager.m_gamePaused) {
-            GameManager.UIManager.FindElement("boost").SetActive(true);
+            GameManager.UIManager.FindElement("boost").GetComponent<Button>().interactable = true;
         }
     }
 
@@ -91,7 +91,7 @@ public class PlayerStats : MonoBehaviour {
         setFireRate(1f);
         setHeight(1f);
         setBoostSpeedIncrement(5f);
-        setInitBoostTime(1.5f);
+        setInitBoostTime(1f);
         setBoostTime(0f);
         m_isShooting = false;
         m_isJumping = false;
@@ -165,17 +165,26 @@ public class PlayerStats : MonoBehaviour {
         }
     }
 
-    public void increaseHeat()
-    {
+    public void increaseHeat() {
         m_heat += m_heatRate;
 
-        if (m_heat > m_maxHeat)
-        {
+        if (m_heat > m_maxHeat) {
             m_heat = m_maxHeat;
         }
 
-        if (m_updateSliders)
-        {
+        if (m_updateSliders) {
+            GameManager.UIManager.FindElement("cooling").GetComponent<Slider>().value = m_heat;
+        }
+    }
+
+    public void decreaseHeat() {
+        m_heat -= m_heatRate;
+
+        if (m_heat < 0) {
+            m_heat = 0;
+        }
+
+        if (m_updateSliders) {
             GameManager.UIManager.FindElement("cooling").GetComponent<Slider>().value = m_heat;
         }
     }
@@ -216,7 +225,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetFloat("boostTime", p_boostTime);
 
         if (m_updateSliders) {
-            GameManager.UIManager.FindElement("boost").SetActive(m_initBoostTime > 0);
+            GameManager.UIManager.FindElement("boost").GetComponent<Button>().interactable = m_initBoostTime > 0;
         }
     }
 

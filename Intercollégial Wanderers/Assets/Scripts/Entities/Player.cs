@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Player : Entity {
 
@@ -26,20 +27,18 @@ public class Player : Entity {
         if (PauseCheck()) return;
 
         m_canShoot = !GameManager.PlayerStats.m_shootDisabled;
-        if (m_canShoot)
-        {
+        if (m_canShoot) {
             GetComponent<Animator>().SetBool("HasGun", true);
         }
+
         m_fireRate = GameManager.PlayerStats.m_fireRate;
 
         if (currentMillis - m_lastShot > m_fireRate * 1000 && GameManager.PlayerStats.m_isShooting) {
             GameManager.PlayerStats.m_isShooting = false;
-            GameManager.UIManager.FindElement("shoot").SetActive(true);
-            GameManager.PlayerStats.increaseHeat();
+            GameManager.UIManager.FindElement("shoot").GetComponent<Button>().interactable = true;
         }
 
-        if (GameManager.PlayerStats.m_heat >= GameManager.PlayerStats.m_maxHeat)
-        {
+        if (GameManager.PlayerStats.m_heat >= GameManager.PlayerStats.m_maxHeat) {
             Die();
         }
     }
@@ -68,10 +67,10 @@ public class Player : Entity {
         long currentMillis = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
         // If the entity can fire again, we shoot (fireRate is in seconds)
-        if (m_canShoot && currentMillis - m_lastShot > m_fireRate * 1000 && !GameManager.PlayerStats.m_shootDisabled) {
+        if (m_canShoot && currentMillis - m_lastShot > m_fireRate * 1000 && !GameManager.PlayerStats.m_shootDisabled && m_projectile) {
             m_lastShot = currentMillis;
 
-            GameObject bullet = Instantiate(m_projectile.gameObject, new Vector2(transform.position.x + 1f, transform.position.y + 0.2f), Quaternion.identity) as GameObject;
+            GameObject bullet = Instantiate(m_projectile.gameObject, new Vector2(transform.position.x, transform.position.y + 0.2f), Quaternion.identity) as GameObject;
 
             bullet.GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("effects");
             GameManager.Instance.m_effectSources.Add(bullet.GetComponent<AudioSource>());
@@ -81,6 +80,8 @@ public class Player : Entity {
 
             GetComponent<AudioSource>().clip = m_shootSound;
             GetComponent<AudioSource>().Play(0);
+
+            GameManager.PlayerStats.increaseHeat();
         }
     }
 }
