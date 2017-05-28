@@ -112,6 +112,9 @@ public class InputController : MonoBehaviour {
             m_player.GetComponent<AudioSource>().clip = m_player.m_jumpSound;
             m_player.GetComponent<AudioSource>().Play();
 
+            Vector2 velocity = m_player.GetComponent<Rigidbody2D>().velocity;
+            velocity.y = 0;
+            m_player.GetComponent<Rigidbody2D>().velocity = velocity;
             m_player.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, m_controller.m_jumpForce));
 
             GameManager.UIManager.FindElement("jump").GetComponent<Button>().interactable = false;
