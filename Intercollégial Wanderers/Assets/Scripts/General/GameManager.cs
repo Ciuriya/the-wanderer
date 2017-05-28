@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour {
             return m_uiManager;
         }
     }
-
+    
     public static bool m_gamePaused;          // If game is currently paused
     public AudioClip m_gameOverSound;         // Sound played when the game is over
     public AudioClip m_victorySound;          // Sound played when the game is won

@@ -171,7 +171,7 @@ public class UIManager : MonoBehaviour {
     public void Boost() {
         // insert boost code here or link it to the variable
         FindElement("boost").SetActive(false);
-        GameManager.PlayerStats.m_isBoosting = true;
+        GameManager.PlayerStats.fillBoostTime();
         // make sure to re-enable button later
     }
 
