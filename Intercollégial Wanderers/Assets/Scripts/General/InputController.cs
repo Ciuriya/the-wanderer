@@ -9,6 +9,7 @@ public class InputController : MonoBehaviour {
     private Player m_player;                // The player
     private PlayerController m_controller;  // The controller
     private Vector2 m_lastFlyForce;         // The last fly force applied
+    private bool m_flyHeatIncreased;        // If the fly heating kicked in at least once
     private float m_timeBeforeFlyHeat;      // Length of time before the next heat increase
     private float m_timeBeforeHeatDecrease; // Length of time before the next heat decrease
 
@@ -85,9 +86,10 @@ public class InputController : MonoBehaviour {
 
                 if (m_timeBeforeFlyHeat <= 0) {
                     GameManager.PlayerStats.increaseHeat();
-                    m_timeBeforeFlyHeat = 500;
+                    m_timeBeforeFlyHeat = 350;
+                    m_flyHeatIncreased = true;
                 }
-            } else {
+            } else if (m_flyHeatIncreased || m_timeBeforeFlyHeat < 175) {
                 Fly();
                 return;
             }
@@ -118,7 +120,8 @@ public class InputController : MonoBehaviour {
 
     public void Fly() {
         if (!GameManager.PlayerStats.m_isFlying && !GameManager.PlayerStats.m_flyDisabled) {
-            m_timeBeforeFlyHeat = 500;
+            m_timeBeforeFlyHeat = 350;
+            m_flyHeatIncreased = false;
             GameManager.PlayerStats.m_isFlying = true;
             GameManager.UIManager.HeightSlider(m_player.transform.position.y + 2f);
             m_player.GetComponent<Rigidbody2D>().gravityScale = 0;
