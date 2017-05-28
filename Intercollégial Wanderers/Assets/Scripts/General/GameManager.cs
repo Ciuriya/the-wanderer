@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour {
     public bool m_allowPausing;
 
     void Start() {
+        Time.timeScale = 1.0f;
         m_gamePaused = false;
         m_allowPausing = true;
         m_manager = gameObject.GetComponent<GameManager>();
