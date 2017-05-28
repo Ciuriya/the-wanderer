@@ -32,8 +32,7 @@ public class LevelTransitioner : MonoBehaviour {
         m_transitionStart = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         Player player = GameManager.InputController.GetPlayer();
 
-        player.m_canDie = false;
-        player.GetComponent<PlayerController>().m_moveForce = 0f;
+        GameManager.m_gamePaused = true;
 
         GameManager.Instance.m_musicSources[0].clip = GameManager.Instance.m_victorySound;
         GameManager.Instance.m_musicSources[0].Play(0);

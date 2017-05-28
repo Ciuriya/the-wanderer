@@ -44,16 +44,16 @@ public class InputController : MonoBehaviour {
 
             float desiredHeight = heightSlider.value;
 
-            if (Input.GetKeyDown(KeyCode.W)) {
-                desiredHeight += 0.25f;
+            if (Input.GetKey(KeyCode.W)) {
+                desiredHeight += 0.1f;
 
                 if (desiredHeight > heightSlider.maxValue) {
                     desiredHeight = heightSlider.maxValue;
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.S)) {
-                desiredHeight -= 0.25f;
+            if (Input.GetKey(KeyCode.S)) {
+                desiredHeight -= 0.1f;
 
                 if (desiredHeight < heightSlider.minValue) {
                     desiredHeight = heightSlider.minValue;
@@ -106,7 +106,7 @@ public class InputController : MonoBehaviour {
 
     public void Jump() {
         if (m_controller != null && !GameManager.PlayerStats.m_isJumping && m_controller.IsGrounded() &&
-            !GameManager.PlayerStats.m_jumpDisabled && !GameManager.PlayerStats.m_isFlying) {
+            !GameManager.PlayerStats.m_jumpDisabled && !GameManager.PlayerStats.m_isFlying && !GameManager.m_gamePaused) {
             GameManager.PlayerStats.m_isJumping = true;
 
             m_player.GetComponent<AudioSource>().clip = m_player.m_jumpSound;
@@ -119,7 +119,7 @@ public class InputController : MonoBehaviour {
     }
 
     public void Fly() {
-        if (!GameManager.PlayerStats.m_isFlying && !GameManager.PlayerStats.m_flyDisabled) {
+        if (!GameManager.PlayerStats.m_isFlying && !GameManager.PlayerStats.m_flyDisabled && !GameManager.m_gamePaused) {
             m_timeBeforeFlyHeat = 350;
             m_flyHeatIncreased = false;
             GameManager.PlayerStats.m_isFlying = true;
@@ -129,7 +129,7 @@ public class InputController : MonoBehaviour {
 
             m_player.GetComponent<Rigidbody2D>().gravityScale = 0;
             GameManager.PlayerStats.increaseHeat();
-        } else if (GameManager.PlayerStats.m_isFlying && !GameManager.PlayerStats.m_flyDisabled) {
+        } else if (GameManager.PlayerStats.m_isFlying && !GameManager.PlayerStats.m_flyDisabled && !GameManager.m_gamePaused) {
             m_player.GetComponent<Rigidbody2D>().gravityScale = 1;
             GameManager.PlayerStats.m_isFlying = false;
             GameManager.UIManager.FindElement("height").GetComponent<Slider>().interactable = false;
