@@ -55,12 +55,12 @@ public class GameManager : MonoBehaviour {
         m_inputController = gameObject.AddComponent<InputController>();
         m_uiManager = GameObject.FindWithTag("UI_Manager").GetComponent<UIManager>();
 
+        PlayerStats.ResetStats();
+
         m_playerStats.setJumpDisabled(m_jumpDisabled);
         m_playerStats.setBoostDisabled(m_boostDisabled);
         m_playerStats.setShootDisabled(m_shootDisabled);
         m_playerStats.setFlyDisabled(m_flyDisabled);
         m_playerStats.setHeightDisabled(m_flyDisabled);
-
-        PlayerStats.ResetStats();
     }
 }

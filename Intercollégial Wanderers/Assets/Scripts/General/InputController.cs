@@ -2,6 +2,7 @@
 using System.Collections;
 using Player2D;
 using System;
+using UnityEngine.UI;
 
 public class InputController : MonoBehaviour {
 
@@ -20,12 +21,38 @@ public class InputController : MonoBehaviour {
             Jump();
         }
 
-        /*if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetKeyDown(KeyCode.E)) {
             GameManager.UIManager.Shoot();
-        }*/
+        }
 
         if (Input.GetKeyDown(KeyCode.LeftShift)) {
             GameManager.UIManager.Boost();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q)) {
+            Fly();
+        }
+
+        Slider heightSlider = GameManager.UIManager.FindElement("height").GetComponent<Slider>();
+
+        if (Input.GetKeyDown(KeyCode.W)) {
+            float desired = heightSlider.value + 0.25f;
+
+            if(desired > heightSlider.maxValue) {
+                desired = heightSlider.maxValue;
+            }
+
+            GameManager.UIManager.HeightSlider(desired);
+        }
+
+        if (Input.GetKeyDown(KeyCode.S)) {
+            float desired = heightSlider.value - 0.25f;
+
+            if (desired < heightSlider.minValue){
+                desired = heightSlider.minValue;
+            }
+
+            GameManager.UIManager.HeightSlider(desired);
         }
 
         long currentMillis = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;

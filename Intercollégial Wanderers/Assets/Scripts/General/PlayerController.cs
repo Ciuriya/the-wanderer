@@ -8,7 +8,7 @@ namespace Player2D
 {
     public class PlayerController : MonoBehaviour
     {
-        private long lastMovementTime = 0;        // Last time the player moved
+        private long m_lastMovementTime = 0;      // Last time the player moved
 
         [HideInInspector]
         public bool m_facingRight = true;         // For determining which way the player is currently facing.
@@ -41,7 +41,7 @@ namespace Player2D
         {
             if (GameManager.m_gamePaused)
             {
-                lastMovementTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                m_lastMovementTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
                 return;
             }
 
@@ -80,13 +80,13 @@ namespace Player2D
             }
 
             if (rigidbody.velocity.x > 0) {
-                lastMovementTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                m_lastMovementTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             }
 
             long currentMillis = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
             // We hit an object
-            if (currentMillis - lastMovementTime >= 50)
+            if (currentMillis - m_lastMovementTime >= 50 && m_lastMovementTime != 0)
             {
                 GameManager.PlayerStats.Damage(1);
             }
