@@ -19,6 +19,7 @@ public abstract class Entity : MonoBehaviour {
     public List<Effect> m_effectsGivenOff;   // Effects given off by this entity
     private Vector3 m_savedPosition;         // If the game is paused, the entity needs to save its location
     private Vector2 m_savedSpeed;            // If the game is paused, the entity needs to save its velocity
+    private float m_savedGravity;              // If the game is paused, the entity needs to save its gravity
 
     void Start() {
         m_fireRate = 1f;
@@ -46,6 +47,7 @@ public abstract class Entity : MonoBehaviour {
         if (GameManager.m_gamePaused && m_savedSpeed == new Vector2(0, 0)) {
             m_savedPosition = transform.position;
             m_savedSpeed = rigidbody.velocity;
+            m_savedGravity = rigidbody.gravityScale;
             rigidbody.velocity = new Vector2(0, 0);
             rigidbody.gravityScale = 0;
 
@@ -58,7 +60,8 @@ public abstract class Entity : MonoBehaviour {
 
         if (m_savedSpeed != new Vector2(0, 0)) {
             rigidbody.velocity = m_savedSpeed;
-            rigidbody.gravityScale = 1;
+            rigidbody.gravityScale = m_savedGravity;
+            transform.position = m_savedPosition;
         }
 
         m_savedSpeed = new Vector2(0, 0);
@@ -88,7 +91,7 @@ public abstract class Entity : MonoBehaviour {
         if (m_canShoot && currentMillis - m_lastShot > m_fireRate * 1000) {
             m_lastShot = currentMillis;
 
-            GameObject bullet = Instantiate(m_projectile.gameObject, new Vector2(transform.position.x + 1f, transform.position.y), Quaternion.identity) as GameObject;
+            GameObject bullet = Instantiate(m_projectile.gameObject, new Vector2(transform.position.x - 1f, transform.position.y + 0.2f), Quaternion.identity) as GameObject;
 
             bullet.GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("effects");
             GameManager.Instance.m_effectSources.Add(bullet.GetComponent<AudioSource>());
