@@ -115,8 +115,13 @@ public class UIManager : MonoBehaviour {
         } else {
             if (!pauseMenu.activeSelf) {
                 GameManager.Instance.m_effectSources[0].clip = m_menuOpen;
+                Time.timeScale = 0.0f;
+                FindElement("height").GetComponent<Slider>().interactable = false;
             } else {
                 GameManager.Instance.m_effectSources[0].clip = m_menuClose;
+                Time.timeScale = 1.0f;
+                GameManager.m_timeSinceUnpause = 0;
+                FindElement("height").GetComponent<Slider>().interactable = GameManager.PlayerStats.m_isFlying;
             }
 
             GameManager.Instance.m_effectSources[0].Play(0);
@@ -161,33 +166,41 @@ public class UIManager : MonoBehaviour {
 
     // The method used by the height slider to increment/decrement the speed value
     public void HeightSlider(float p_value) {
-        if (GameManager.PlayerStats.m_isFlying) {
+        if (GameManager.PlayerStats.m_isFlying && !GameManager.m_gamePaused) {
             GameManager.PlayerStats.setHeight(p_value);
         }
     }
 
     // The method used by the boost button to boost
     public void Boost() {
-        FindElement("boost").GetComponent<Button>().interactable = false;
-        GameManager.PlayerStats.fillBoostTime();
-        GameManager.PlayerStats.increaseHeat();
+        if (!GameManager.m_gamePaused) {
+            FindElement("boost").GetComponent<Button>().interactable = false;
+            GameManager.PlayerStats.fillBoostTime();
+            GameManager.PlayerStats.increaseHeat();
+        }
     }
 
     // The method used by the jump button to jump
     public void Jump() {
-        GameManager.InputController.Jump();
+        if (!GameManager.m_gamePaused) {
+            GameManager.InputController.Jump();
+        }
     }
 
     // The method used by the shoot button to shoot
     public void Shoot() {
-        FindElement("shoot").GetComponent<Button>().interactable = false;
-        GameManager.PlayerStats.m_isShooting = true;
-        GameManager.InputController.GetPlayer().Shoot();
+        if (!GameManager.m_gamePaused) {
+            FindElement("shoot").GetComponent<Button>().interactable = false;
+            GameManager.PlayerStats.m_isShooting = true;
+            GameManager.InputController.GetPlayer().Shoot();
+        }
     }
 
     // The method used by the fly button to fly
     public void Fly() {
-        GameManager.InputController.Fly();
+        if (!GameManager.m_gamePaused) {
+            GameManager.InputController.Fly();
+        }
 
     }
 

@@ -40,8 +40,7 @@ namespace Player2D
 
         void FixedUpdate()
         {
-            if (GameManager.m_gamePaused)
-            {
+            if (GameManager.m_gamePaused || GameManager.m_timeSinceUnpause < 0.2f) {
                 m_lastMovementTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
                 return;
             }

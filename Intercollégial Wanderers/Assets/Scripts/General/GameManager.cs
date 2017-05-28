@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour {
     }
     
     public static bool m_gamePaused;          // If game is currently paused
+    public static float m_timeSinceUnpause;    // The time since the game was unpaused in seconds
     public AudioClip m_gameOverSound;         // Sound played when the game is over
     public AudioClip m_victorySound;          // Sound played when the game is won
     public int m_gameOverLength;              // Length of the game over fail time, to replace with a real menu if possible
@@ -62,5 +63,9 @@ public class GameManager : MonoBehaviour {
         m_playerStats.setShootDisabled(m_shootDisabled);
         m_playerStats.setFlyDisabled(m_flyDisabled);
         m_playerStats.setHeightDisabled(m_flyDisabled);
+    }
+
+    void Update() {
+        m_timeSinceUnpause += Time.deltaTime;
     }
 }
