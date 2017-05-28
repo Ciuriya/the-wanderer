@@ -157,14 +157,6 @@ public class UIManager : MonoBehaviour {
         GameManager.InputController.Jump();
     }
 
-    // The method used by the stop button to stop
-    public void Stop() {
-        // insert stop code here or link it to the variable
-        FindElement("stop").SetActive(false);
-        GameManager.PlayerStats.m_isStopped = true;
-        // make sure to re-enable button later
-    }
-
     // The method used by the shoot button to shoot
     public void Shoot() {
         FindElement("shoot").SetActive(false);
