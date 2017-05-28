@@ -28,7 +28,8 @@ public class InputController : MonoBehaviour {
     }
 
     public void Jump() {
-        if (m_controller != null && !GameManager.PlayerStats.m_isJumping && m_controller.IsGrounded()) {
+        if (m_controller != null && !GameManager.PlayerStats.m_isJumping && m_controller.IsGrounded() &&
+            !GameManager.PlayerStats.m_jumpDisabled) {
             GameManager.PlayerStats.m_isJumping = true;
 
             m_player.GetComponent<AudioSource>().clip = m_player.m_jumpSound;
