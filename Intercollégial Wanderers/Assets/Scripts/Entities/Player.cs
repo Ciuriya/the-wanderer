@@ -40,7 +40,7 @@ public class Player : Entity {
             m_canDie = false;
             GameManager.m_gamePaused = true;
             m_deathTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-
+            GetComponent<Animator>().SetBool("IsDead", true);
             GameManager.Instance.m_musicSources[0].clip = GameManager.Instance.m_gameOverSound;
             GameManager.Instance.m_musicSources[0].Play(0);
         }
