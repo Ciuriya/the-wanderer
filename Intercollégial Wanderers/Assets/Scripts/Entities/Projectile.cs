@@ -7,10 +7,12 @@ public class Projectile : Entity {
     public AudioClip m_hitSound;  // The sound played on projectile hit
     public Entity m_holder;       // The entity shooting this projectile
     private Vector3 m_start;      // The shot position
+    private bool m_shot;          // If the projectile was shot
 
     void Start() {
         m_name = "projectile";
         m_canShoot = false;
+        m_canDie = false;
     }
 
     void Update() {
@@ -22,6 +24,7 @@ public class Projectile : Entity {
     }
 
     public void Shot() {
+        m_shot = true;
         m_start = transform.position;
         Physics2D.IgnoreCollision(GetComponent<Collider2D>(), m_holder.GetComponent<Collider2D>());
     }
@@ -50,7 +53,9 @@ public class Projectile : Entity {
 
     // Kills the entity
     protected override void Die() {
-        GameManager.Instance.m_effectSources.Remove(GetComponent<AudioSource>());
-        Destroy(gameObject);
+        if (m_shot) {
+            GameManager.Instance.m_effectSources.Remove(GetComponent<AudioSource>());
+            Destroy(gameObject);
+        }
     }
 }
