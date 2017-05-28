@@ -27,7 +27,7 @@ namespace Player2D
         void Awake() {
             // Setting up references.
             m_groundCheck = transform.Find("groundChecker");
-            //anim = GetComponent<Animator>();
+            m_anim = GetComponent<Animator>();
         }
 
 
@@ -42,11 +42,11 @@ namespace Player2D
             }
 
             // Cache the horizontal input.
-            float h = Input.GetAxis("Horizontal");
+            //float h = Input.GetAxis("Vertical");
 
             // The Speed animator parameter is set to the absolute value of the horizontal input.
-            //anim.SetFloat("Speed", Mathf.Abs(h));
-
+            //m_anim.SetFloat("VSpeed", Mathf.Abs(h));
+            m_anim.SetBool("IsJumping", !m_grounded);
             // If the player is changing direction (h has a different sign to velocity.x) or hasn't reached maxSpeed yet...
             if (GetComponent<Rigidbody2D>().velocity.x < m_maxSpeed)
                 // ... add a force to the player.
