@@ -50,9 +50,10 @@ public class PlayerStats : MonoBehaviour {
         m_updateSliders = true;
 
         if (GameManager.UIManager && GameManager.UIManager.FindElement("menu") == null) {
-            Slider heatingSlider = GameManager.UIManager.FindElement("heating").GetComponent<Slider>();
+            Slider heatingSlider = GameManager.UIManager.FindElement("cooling").GetComponent<Slider>();
             heatingSlider.value = m_heat;
             heatingSlider.maxValue = m_maxHeat;
+            heatingSlider.gameObject.SetActive(true);
 
             Slider heightSlider = GameManager.UIManager.FindElement("height").GetComponent<Slider>();
             heightSlider.value = m_height;
@@ -140,7 +141,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetFloat("maxHeat", p_maxHeat);
 
         if (m_updateSliders) {
-            GameManager.UIManager.FindElement("heating").GetComponent<Slider>().maxValue = p_maxHeat;
+            GameManager.UIManager.FindElement("cooling").GetComponent<Slider>().maxValue = p_maxHeat;
         }
     }
 
@@ -160,7 +161,7 @@ public class PlayerStats : MonoBehaviour {
         PlayerPrefs.SetFloat("heat", heat);
 
         if (m_updateSliders) {
-            GameManager.UIManager.FindElement("heating").GetComponent<Slider>().value = heat;
+            GameManager.UIManager.FindElement("cooling").GetComponent<Slider>().value = heat;
         }
     }
 
@@ -171,6 +172,11 @@ public class PlayerStats : MonoBehaviour {
         if (m_heat > m_maxHeat)
         {
             m_heat = m_maxHeat;
+        }
+
+        if (m_updateSliders)
+        {
+            GameManager.UIManager.FindElement("cooling").GetComponent<Slider>().value = m_heat;
         }
     }
 

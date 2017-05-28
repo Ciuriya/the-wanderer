@@ -190,6 +190,7 @@ public class UIManager : MonoBehaviour {
     // The method used by the fly button to fly
     public void Fly() {
         GameManager.InputController.Fly();
+
     }
 
     // Finds an UI Element using its name
