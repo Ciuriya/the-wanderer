@@ -164,7 +164,9 @@ public class UIManager : MonoBehaviour {
 
     // The method used by the height slider to increment/decrement the speed value
     public void HeightSlider(float p_value) {
-        GameManager.PlayerStats.setHeight(p_value);
+        if (GameManager.PlayerStats.m_isFlying) {
+            GameManager.PlayerStats.setHeight(p_value);
+        }
     }
 
     // The method used by the boost button to boost
